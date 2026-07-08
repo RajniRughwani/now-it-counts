@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
+/* Constella — warm, pastel, unhurried. Warmth, trust, honesty, organic. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fbf6f0; /* warm cream */
+  --foreground: #3a3330; /* warm charcoal */
+  --card: #ffffff;
+  --rose: #c97590; /* primary action */
+  --rose-deep: #b25f7b;
+  --rose-soft: #f3dde4;
+  --rose-mist: #faf0f3;
+  --sage: #8fae8c;
+  --sage-soft: #e6efe4;
+  --lavender: #b9a9dd;
+  --lavender-soft: #efeaf8;
+  --apricot-soft: #fbeadb;
+  --muted: #8c8078;
+  --line: #ecdfd6;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-rose: var(--rose);
+  --color-rose-deep: var(--rose-deep);
+  --color-rose-soft: var(--rose-soft);
+  --color-rose-mist: var(--rose-mist);
+  --color-sage: var(--sage);
+  --color-sage-soft: var(--sage-soft);
+  --color-lavender: var(--lavender);
+  --color-lavender-soft: var(--lavender-soft);
+  --color-apricot-soft: var(--apricot-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), "Segoe UI", sans-serif;
+}
+
+@keyframes gentle-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gentle-in {
+  animation: gentle-in 0.45s ease-out both;
 }

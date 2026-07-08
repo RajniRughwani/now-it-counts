@@ -58,6 +58,8 @@ export interface SymptomDef {
   clinicalName: string;
   /** Exactly how it appears on screen — warm, conversational. */
   screenWording: string;
+  /** Short friendly label for chips/rating rows. */
+  shortLabel: string;
   /** Extra gentle flag shown/spoken when present (e.g. palpitations). */
   gentleFlag?: string;
 }
@@ -70,6 +72,7 @@ export interface SymptomDef {
  */
 export const ANCHOR: SymptomDef = {
   id: "menstrual_change",
+  shortLabel: "Period changes",
   role: "anchor",
   clinicalName: "Menstrual / cycle change",
   screenWording: "Have your periods changed at all recently?",
@@ -83,12 +86,14 @@ export const ANCHOR: SymptomDef = {
 export const SPECIFIC: SymptomDef[] = [
   {
     id: "hot_flushes",
+    shortLabel: "Hot flushes",
     role: "specific",
     clinicalName: "Hot flushes",
     screenWording: "Any sudden hot flushes?",
   },
   {
     id: "night_sweats",
+    shortLabel: "Night sweats",
     role: "specific",
     clinicalName: "Night sweats",
     screenWording: "Waking up hot or drenched at night?",
@@ -103,24 +108,28 @@ export const SPECIFIC: SymptomDef[] = [
 export const DISMISSED: SymptomDef[] = [
   {
     id: "fatigue",
+    shortLabel: "Feeling drained",
     role: "dismissed",
     clinicalName: "Fatigue",
     screenWording: "Been feeling drained — exhausted, no energy?",
   },
   {
     id: "brain_fog",
+    shortLabel: "Brain fog",
     role: "dismissed",
     clinicalName: "Brain fog / memory",
     screenWording: "Brain not quite keeping up — foggy, forgetful, losing words?",
   },
   {
     id: "mood",
+    shortLabel: "Mood",
     role: "dismissed",
     clinicalName: "Mood (anxiety / low / irritable)",
     screenWording: "How's your head been — anxious, low, snappy, tearful?",
   },
   {
     id: "sleep",
+    shortLabel: "Sleep",
     role: "dismissed",
     clinicalName: "Sleep problems",
     screenWording: "How's sleep — trouble getting to sleep, or waking in the night?",
@@ -134,18 +143,21 @@ export const DISMISSED: SymptomDef[] = [
 export const SUPPORTING: SymptomDef[] = [
   {
     id: "joint_muscle_aches",
+    shortLabel: "Aches & stiffness",
     role: "supporting",
     clinicalName: "Joint / muscle aches",
     screenWording: "Any joint or muscle aches or stiffness?",
   },
   {
     id: "weight_bloating",
+    shortLabel: "Weight / bloating",
     role: "supporting",
     clinicalName: "Weight / bloating",
     screenWording: "Weight or bloating changes?",
   },
   {
     id: "palpitations",
+    shortLabel: "Heart racing",
     role: "supporting",
     clinicalName: "Palpitations",
     screenWording: "Heart racing or fluttering?",
