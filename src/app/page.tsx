@@ -23,14 +23,12 @@ export default function Home() {
           >
             💬 &nbsp;Start with text
           </Link>
-          <button
-            type="button"
-            disabled
-            title="Voice conversation coming on Day 2"
-            className="rounded-full border border-line bg-card text-muted px-8 py-4 text-base font-medium cursor-not-allowed"
+          <Link
+            href="/voice"
+            className="rounded-full border border-rose text-rose hover:bg-rose-mist px-8 py-4 text-base font-medium transition-colors"
           >
-            🎙️ &nbsp;Talk instead — coming soon
-          </button>
+            🎙️ &nbsp;Talk instead
+          </Link>
         </div>
 
         <p className="text-xs text-muted leading-relaxed max-w-md mx-auto">
