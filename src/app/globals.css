@@ -57,3 +57,31 @@ body {
 .gentle-in {
   animation: gentle-in 0.45s ease-out both;
 }
+
+/* Voice orb — visibly alive, not static, so it's obvious the call is live. */
+@keyframes orb-speak {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+@keyframes orb-listen {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.04); opacity: 0.85; }
+}
+
+@keyframes orb-ring {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.orb-speaking {
+  animation: orb-speak 0.7s ease-in-out infinite;
+}
+
+.orb-listening {
+  animation: orb-listen 1.8s ease-in-out infinite;
+}
+
+.orb-ring {
+  animation: orb-ring 1.6s ease-out infinite;
+}

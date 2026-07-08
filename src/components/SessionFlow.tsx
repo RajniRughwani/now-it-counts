@@ -18,6 +18,7 @@ import {
   Chip,
   PartLabel,
   PrimaryButton,
+  ProgressBar,
   Question,
   SkipLink,
   Soft,
@@ -59,6 +60,32 @@ type Stage =
   | "ethnicity"
   | "language"
   | "postcode";
+
+/** Which of the 5 PRD parts each stage belongs to — drives the progress bar. */
+const STAGE_PART: Record<Stage, number> = {
+  consent: 0,
+  story: 1,
+  whatMatters: 1,
+  bridge: 2,
+  dismissed: 2,
+  anchor: 2,
+  specific: 2,
+  supporting: 2,
+  rate: 2,
+  botherMost: 2,
+  duration: 3,
+  lifeAreas: 3,
+  journeyAsk: 4,
+  told: 4,
+  heldBack: 4,
+  gpOneThing: 4,
+  aboutBridge: 5,
+  ageBand: 5,
+  ethnicity: 5,
+  language: 5,
+  postcode: 5,
+};
+const TOTAL_PARTS = 5;
 
 const AGE_BANDS = ["Under 35", "35–39", "40–44", "45–49", "50–55", "Over 55"];
 
@@ -142,6 +169,10 @@ export default function SessionFlow() {
         </button>
       </header>
 
+      {STAGE_PART[stage] > 0 && (
+        <ProgressBar current={STAGE_PART[stage]} total={TOTAL_PARTS} />
+      )}
+
       {stage === "consent" && (
         <Card>
           <PartLabel>Before we start</PartLabel>
@@ -160,6 +191,11 @@ export default function SessionFlow() {
               If you choose, your <strong>anonymised</strong> answers can join
               thousands of others to build a picture of women&apos;s health across
               the UK that doesn&apos;t currently exist.
+            </p>
+            <p className="text-muted">
+              Near the end, we&apos;ll ask a handful of quick questions about
+              you (age band, ethnicity, area) — each with a reason, all
+              optional. That&apos;s what turns your story into evidence.
             </p>
             <p className="text-muted">
               Your rights: skip anything, stop any time, and delete everything

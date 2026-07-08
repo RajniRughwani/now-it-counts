@@ -18,6 +18,26 @@ export function PartLabel({ children }: { children: ReactNode }) {
   );
 }
 
+/** Shows how close to the end she is — reduces drop-off before the equity questions. */
+export function ProgressBar({ current, total }: { current: number; total: number }) {
+  return (
+    <div className="w-full max-w-xl mb-3 gentle-in">
+      <div className="flex justify-between text-xs text-muted mb-1.5">
+        <span>
+          Part {current} of {total}
+        </span>
+        <span>{current === total ? "Almost done" : `~${(total - current) * 45} sec left`}</span>
+      </div>
+      <div className="h-1.5 w-full rounded-full bg-line overflow-hidden">
+        <div
+          className="h-full rounded-full bg-rose transition-all duration-500"
+          style={{ width: `${(current / total) * 100}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function Question({ children }: { children: ReactNode }) {
   return (
     <h2 className="text-xl sm:text-2xl font-medium leading-snug mb-2">
