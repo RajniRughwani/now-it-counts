@@ -43,7 +43,7 @@ export default function SummaryPage() {
   }, []);
 
   const onDelete = () => {
-    if (confirm("Delete everything? No reason needed — it all goes.")) {
+    if (confirm("Delete everything? No reason needed, it all goes.")) {
       deleteEverything();
       window.location.href = "/";
     }
@@ -74,7 +74,7 @@ export default function SummaryPage() {
           <PartLabel>Nearly done</PartLabel>
           <Question>Putting your words into one page…</Question>
           <Soft>
-            Written in language any healthcare professional will recognise —
+            Written in language any healthcare professional will recognise,
             but rooted in what you actually said.
           </Soft>
           <div className="flex gap-1.5 mt-2" aria-label="loading">
@@ -90,7 +90,7 @@ export default function SummaryPage() {
           <PartLabel>A small hiccup</PartLabel>
           <Question>We couldn&apos;t write your page just now.</Question>
           <Soft>
-            Nothing you shared has been lost from this session — and nothing has
+            Nothing you shared has been lost from this session, and nothing has
             been stored anywhere else. You can try again in a moment.
           </Soft>
           <button
@@ -106,7 +106,7 @@ export default function SummaryPage() {
       {result?.gpSummary && (
         <>
           <Card>
-            <PartLabel>Your record — yours to keep</PartLabel>
+            <PartLabel>Your record, yours to keep</PartLabel>
             <article className="prose-sm max-w-none [&_h1]:text-xl [&_h2]:text-lg [&_h2]:font-medium [&_h2]:mt-5 [&_h2]:mb-2 [&_p]:leading-relaxed [&_p]:mb-3 [&_li]:leading-relaxed [&_blockquote]:border-l-2 [&_blockquote]:border-rose [&_blockquote]:pl-3 [&_blockquote]:italic">
               <Markdown text={result.gpSummary} />
             </article>

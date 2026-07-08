@@ -102,7 +102,7 @@ Return JSON with exactly two fields:
   3. "What bothers me most" — her ranking, centre stage.
   4. "My journey so far" — what she's been told / what held her back, verbatim where given.
   5. "Questions worth asking" — 2-4 gentle, practical questions for the appointment (respect the GATE).
-  Keep it genuinely one page. No diagnosis. No alarm.
+  Keep it genuinely one page. No diagnosis. No alarm. Do not use em dashes anywhere in the output text; use commas, periods, or colons instead.
 
 "shareCard": a short, warm 2-3 sentence version for passing to a friend or the group chat — "this is what I've been dealing with… took me 5 minutes, here's the link." First person, her tone, no clinical jargon, no health anxiety. Respect the GATE here too.`;
 

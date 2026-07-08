@@ -134,7 +134,7 @@ export default function SessionFlow() {
   const finish = () => router.push("/summary");
 
   const onDeleteEverything = () => {
-    if (confirm("Delete everything from this session? No reason needed — it all goes.")) {
+    if (confirm("Delete everything from this session? No reason needed, it all goes.")) {
       deleteEverything();
       setData(EMPTY_SESSION);
       router.push("/");
@@ -180,11 +180,11 @@ export default function SessionFlow() {
           <div className="space-y-3 text-[15px] leading-relaxed mb-6">
             <p>
               This is a short, unhurried conversation about how you&apos;ve
-              been feeling — go at whatever pace suits you.
+              been feeling, at whatever pace suits you.
             </p>
             <p>
               At the end you&apos;ll get a <strong>one-page summary you own</strong>,
-              written for whoever you trust — your GP, a nurse, a pharmacist, or a
+              written for whoever you trust: your GP, a nurse, a pharmacist, or a
               clinician back home.
             </p>
             <p>
@@ -194,12 +194,12 @@ export default function SessionFlow() {
             </p>
             <p className="text-muted">
               Near the end, we&apos;ll ask a handful of quick questions about
-              you (age band, ethnicity, area) — each with a reason, all
+              you (age band, ethnicity, area), each with a reason, all
               optional. That&apos;s what turns your story into evidence.
             </p>
             <p className="text-muted">
               Your rights: skip anything, stop any time, and delete everything
-              afterwards — no reason needed. No name required. No audio kept.
+              afterwards, no reason needed. No name required. No audio kept.
             </p>
           </div>
           <div className="flex items-center gap-4 flex-wrap">
@@ -209,7 +209,7 @@ export default function SessionFlow() {
                 go("story");
               }}
             >
-              Yes — I&apos;m happy to start
+              Yes, I&apos;m happy to start
             </PrimaryButton>
             <SkipLink onClick={() => router.push("/")} label="Not today" />
           </div>
@@ -221,7 +221,7 @@ export default function SessionFlow() {
           <PartLabel>Your story</PartLabel>
           <Question>Let&apos;s start with you.</Question>
           <Soft>
-            How have you been feeling lately — in yourself, your energy, your
+            How have you been feeling lately, in yourself, your energy, your
             mood, your body? Tell me in your own words, however you&apos;d say it
             to a friend. What&apos;s changed recently? What bothers you most?
           </Soft>
@@ -258,7 +258,7 @@ export default function SessionFlow() {
             </Soft>
           )}
           <Question>What matters most to you right now?</Question>
-          <Soft>Sleeping well, feeling like yourself again, just knowing what this is — whatever it is, in your words.</Soft>
+          <Soft>Sleeping well, feeling like yourself again, just knowing what this is, whatever it is, in your words.</Soft>
           <div className="flex flex-wrap gap-2 mb-4">
             {["Sleeping properly again", "Feeling like myself", "Just knowing what this is"].map(
               (opt) => (
@@ -296,7 +296,7 @@ export default function SessionFlow() {
           <Question>This isn&apos;t a checklist.</Question>
           <Soft>
             I&apos;ll mention a few things other women often describe. Tap
-            anything that sounds familiar — and ignore anything that doesn&apos;t.
+            anything that sounds familiar, and ignore anything that doesn&apos;t.
             There are no wrong answers, and you can skip whatever you like.
           </Soft>
           <PrimaryButton onClick={() => go("dismissed")}>Okay</PrimaryButton>
@@ -326,7 +326,7 @@ export default function SessionFlow() {
           <PartLabel>One gentle question</PartLabel>
           <Question>{ANCHOR.screenWording}</Question>
           <Soft>
-            This one matters more than it seems — it&apos;s often the clearest
+            This one matters more than it seems: it&apos;s often the clearest
             clue a body gives. Whatever the answer, it&apos;s useful.
           </Soft>
           <div className="flex flex-wrap gap-2">
@@ -350,7 +350,7 @@ export default function SessionFlow() {
         <SymptomTapScreen
           part="How you've been"
           question="And either of these?"
-          soft="Sudden waves of heat, day or night — even occasionally."
+          soft="Sudden waves of heat, day or night, even occasionally."
           symptoms={SPECIFIC}
           tapped={tapped}
           onTap={toggleTap}
@@ -367,7 +367,7 @@ export default function SessionFlow() {
       {stage === "supporting" && (
         <SymptomTapScreen
           part="How you've been"
-          question="Last few — any of these?"
+          question="Last few: any of these?"
           soft="Small things count too. They help build the full picture."
           symptoms={SUPPORTING}
           tapped={tapped}
@@ -389,7 +389,7 @@ export default function SessionFlow() {
         <Card>
           <PartLabel>How you&apos;ve been</PartLabel>
           <Question>How much does each of these get in your way?</Question>
-          <Soft>Day to day — not at your worst, just typically.</Soft>
+          <Soft>Day to day, not at your worst, just typically.</Soft>
           <div className="space-y-5 mb-6">
             {presentSymptoms.map((s) => (
               <div key={s.id}>
@@ -422,7 +422,7 @@ export default function SessionFlow() {
           <PartLabel>How you&apos;ve been</PartLabel>
           <Question>Which one or two bother you the most?</Question>
           <Soft>
-            This becomes the heart of your summary — the thing you most want
+            This becomes the heart of your summary: the thing you most want
             taken seriously.
           </Soft>
           <div className="flex flex-wrap gap-2 mb-6">
@@ -510,7 +510,7 @@ export default function SessionFlow() {
         <Card>
           <PartLabel>Your journey so far</PartLabel>
           <Question>
-            Have you spoken to a GP — or anyone — about any of this?
+            Have you spoken to a GP, or anyone, about any of this?
           </Question>
           <div className="flex flex-wrap gap-2 mb-6">
             <Chip
@@ -539,7 +539,7 @@ export default function SessionFlow() {
       {stage === "told" && (
         <FreeTextScreen
           part="Your journey so far"
-          question="What did they say — and was anything offered?"
+          question="What did they say, and was anything offered?"
           soft="In your own words. Exactly as you remember it."
           text={text}
           setText={setText}
@@ -554,7 +554,7 @@ export default function SessionFlow() {
       {stage === "heldBack" && (
         <FreeTextScreen
           part="Your journey so far"
-          question="No judgement at all — what's held you back?"
+          question="No judgement at all: what's held you back?"
           soft="Time, not wanting to make a fuss, not knowing what to say, past experiences… anything."
           text={text}
           setText={setText}
@@ -569,7 +569,7 @@ export default function SessionFlow() {
       {stage === "gpOneThing" && (
         <FreeTextScreen
           part="Your journey so far"
-          question="If your GP could know just one thing about what this has really been like — what would it be?"
+          question="If your GP could know just one thing about what this has really been like, what would it be?"
           soft="This goes at the top of your summary, in your words."
           text={text}
           setText={setText}
@@ -584,7 +584,7 @@ export default function SessionFlow() {
       {stage === "aboutBridge" && (
         <Card>
           <PartLabel>Nearly there</PartLabel>
-          <Question>Four quick things about you — each with a reason.</Question>
+          <Question>Four quick things about you, each with a reason.</Question>
           <Soft>
             These are what turn thousands of individual stories into evidence
             that health services can&apos;t ignore. Every one is optional, and
@@ -601,7 +601,7 @@ export default function SessionFlow() {
         <ChoiceScreen
           part="About you"
           question="Which age group are you in?"
-          soft="Why we ask: perimenopause starts years earlier for some communities — age bands (never your date of birth) make that visible."
+          soft="Why we ask: perimenopause starts years earlier for some communities. Age bands (never your date of birth) make that visible."
           options={AGE_BANDS}
           selected={data.ageBand}
           onSelect={(v) => {
@@ -618,7 +618,7 @@ export default function SessionFlow() {
           <Question>How would you describe your ethnicity?</Question>
           <Soft>
             Why we ask: symptoms start earlier and show up differently across
-            ethnic groups — and some groups are far less likely to be offered
+            ethnic groups, and some groups are far less likely to be offered
             help. This is how that becomes impossible to ignore.
           </Soft>
           <div className="flex flex-wrap gap-2 mb-4">
@@ -665,7 +665,7 @@ export default function SessionFlow() {
           </Question>
           <Soft>
             Why we ask: health conversations work better in the language you
-            think in — services should know which ones are missing.
+            think in, services should know which ones are missing.
           </Soft>
           <div className="flex flex-wrap gap-2 mb-4">
             {LANGUAGES.map((l) => (
@@ -707,7 +707,7 @@ export default function SessionFlow() {
         <Card>
           <PartLabel>About you</PartLabel>
           <Question>
-            And just the first half of your postcode — like &ldquo;LS8&rdquo; or
+            And just the first half of your postcode, like &ldquo;LS8&rdquo; or
             &ldquo;E7&rdquo;.
           </Question>
           <Soft>
@@ -728,9 +728,9 @@ export default function SessionFlow() {
                 finish();
               }}
             >
-              Finish — show my summary
+              Finish: show my summary
             </PrimaryButton>
-            <SkipLink onClick={finish} label="Prefer not to say — show my summary" />
+            <SkipLink onClick={finish} label="Prefer not to say, show my summary" />
           </div>
         </Card>
       )}
@@ -784,7 +784,7 @@ function SymptomTapScreen({
         <PrimaryButton onClick={onNext} disabled={tapped.length === 0}>
           Continue
         </PrimaryButton>
-        <SkipLink onClick={onSkip} label="None of these — move on" />
+        <SkipLink onClick={onSkip} label="None of these, move on" />
       </div>
     </Card>
   );

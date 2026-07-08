@@ -102,12 +102,12 @@ function VoiceSessionInner() {
           <>
             <Question>Whenever you&apos;re ready, just say hello.</Question>
             <Soft>
-              This is a spoken version of the same gentle conversation — every
+              This is a spoken version of the same gentle conversation, every
               question optional, nothing kept after you finish. You&apos;ll
               need to allow microphone access.
             </Soft>
             <p className="text-xs text-muted mb-4">
-              Speaks English, Hindi, and Polish fluently — and will try its
+              Speaks English, Hindi, and Polish fluently, and will try its
               best in several other languages too.
             </p>
             <PrimaryButton onClick={start}>🎙️ Start talking</PrimaryButton>
@@ -129,7 +129,7 @@ function VoiceSessionInner() {
         {status === "connected" && (
           <>
             <Question>{isSpeaking ? "Speaking…" : "Listening…"}</Question>
-            <Soft>Talk naturally — skip anything, or just say you&apos;d rather stop.</Soft>
+            <Soft>Talk naturally, skip anything, or just say you&apos;d rather stop.</Soft>
 
             <div className="relative mx-auto my-6 w-24 h-24" aria-hidden>
               {isSpeaking && (
@@ -168,7 +168,7 @@ function VoiceSessionInner() {
             </button>
 
             <p className="text-xs text-muted mt-4">
-              🔒 Nothing is recorded — only used to write your summary when you finish.
+              🔒 Nothing is recorded, only used to write your summary when you finish.
             </p>
           </>
         )}
@@ -176,7 +176,7 @@ function VoiceSessionInner() {
         {finishing && (
           <>
             <Question>Putting your words into one page…</Question>
-            <Soft>One moment — taking you to your summary.</Soft>
+            <Soft>One moment, taking you to your summary.</Soft>
             <div className="flex gap-1.5 mt-2" aria-label="loading">
               <span className="w-2 h-2 rounded-full bg-rose animate-bounce [animation-delay:0ms]" />
               <span className="w-2 h-2 rounded-full bg-rose animate-bounce [animation-delay:150ms]" />
