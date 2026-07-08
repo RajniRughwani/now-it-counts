@@ -179,8 +179,8 @@ export default function SessionFlow() {
           <Question>A few things, said plainly.</Question>
           <div className="space-y-3 text-[15px] leading-relaxed mb-6">
             <p>
-              This is a short, unhurried conversation — about six minutes — about
-              how you&apos;ve been feeling.
+              This is a short, unhurried conversation about how you&apos;ve
+              been feeling — go at whatever pace suits you.
             </p>
             <p>
               At the end you&apos;ll get a <strong>one-page summary you own</strong>,

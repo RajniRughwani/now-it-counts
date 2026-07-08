@@ -11,7 +11,7 @@ export default function Home() {
           <span className="text-rose">Now it counts.</span>
         </h1>
         <p className="text-base sm:text-lg text-muted leading-relaxed mb-10">
-          A gentle six-minute conversation about how you&apos;ve really been —
+          A gentle, unhurried conversation about how you&apos;ve really been —
           ending in a one-page summary you own, ready for whoever you trust.
           Not a diagnosis. Not a tracker. Just your story, taken seriously.
         </p>

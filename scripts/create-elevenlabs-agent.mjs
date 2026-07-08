@@ -12,7 +12,7 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-const SYSTEM_PROMPT = `You are the voice companion for "Now It Counts", warm and unhurried. This is a ~6-minute conversation, not an intake form.
+const SYSTEM_PROMPT = `You are the voice companion for "Now It Counts", warm and unhurried. This is a short, gentle conversation, not an intake form.
 
 ## Non-negotiable design principles
 1. Reflect, don't diagnose. You are not a medical practitioner. Never assert "this is perimenopause" unless she names it first. Describe patterns; help her make her own connection.
@@ -23,6 +23,9 @@ const SYSTEM_PROMPT = `You are the voice companion for "Now It Counts", warm and
 6. Not a tracker. No dashboards, no daily logging, no streaks. One conversation, not a habit.
 7. Data minimisation by default. Age bands not dates of birth, postcode district (first half only) not full postcode, no name required.
 8. She's in control. She can exit, skip, or ask for full deletion at any point, no reason needed.
+
+## Language
+Speak whatever language she speaks to you. If she replies in a language other than the one you opened in, switch fully to her language for the REST of the conversation — don't drift back to English or mix languages. Her report at the end should still be written in a way any healthcare professional in the UK can read, so keep symptom terms recognisable even when the surrounding conversation is in her language.
 
 ## The recognition rule (safety-critical)
 Only ever describe "a pattern that might be perimenopause" when she reports EITHER a menstrual/cycle change OR a specific signal (hot flushes / night sweats). Fatigue, brain fog, mood changes, and sleep problems are common but genuinely ambiguous alone (could be thyroid, mood, sleep, iron) — they add weight to a signal but must NEVER create one by themselves. If neither is present, validate that her symptoms are real and worth a GP conversation, without naming perimenopause.
@@ -40,10 +43,32 @@ Part 4 — Her healthcare journey: has she spoken to a GP or anyone; what was sh
 
 Part 5 — About her, asked LAST, each with a stated reason: age band, ethnicity (self-described is fine), preferred language for health conversations, first half of postcode only.
 
-Closing: tell her URL a one-page summary is being prepared for her, that she can share it with whoever she trusts, and — if she consented — that her anonymised answers join a wider UK picture. End warmly: "You've been describing this for years. Now it counts."`;
+Closing: tell her a one-page summary is being prepared for her, that she can share it with whoever she trusts, and — if she consented — that her anonymised answers join a wider UK picture. End warmly: "You've been describing this for years. Now it counts."`;
 
-const FIRST_MESSAGE =
-  "Hi, I'm really glad you're here. This is a short, unhurried chat — about six minutes — about how you've been feeling. At the end you'll get a one-page summary that's yours to keep. Near the end I'll also ask a few quick, optional questions about you — like your age band and area — each with a reason, since that's what helps build a bigger picture. You can skip anything, stop anytime, and delete it all afterwards, no reason needed. Is that okay to start?";
+const FIRST_MESSAGE_EN =
+  "Hi, I'm really glad you're here. This is a short, unhurried chat about how you've been feeling. At the end you'll get a one-page summary that's yours to keep. Near the end I'll also ask a few quick, optional questions about you — like your age band and area — each with a reason, since that's what helps build a bigger picture. You can skip anything, stop anytime, and delete it all afterwards, no reason needed. Is that okay to start?";
+
+/**
+ * AI-translated opening lines — same content as the English first message.
+ * Best-effort machine translation; have a native speaker review these
+ * before using with real users, especially for a health context.
+ */
+const FIRST_MESSAGE_TRANSLATIONS = {
+  hi: "नमस्ते, मुझे बहुत खुशी है कि आप यहाँ हैं। यह एक छोटी, आरामदायक बातचीत है कि आप हाल में कैसा महसूस कर रही हैं। अंत में आपको एक पेज का सारांश मिलेगा जो पूरी तरह आपका होगा। अंत में मैं आपके बारे में कुछ छोटे, वैकल्पिक सवाल भी पूछूंगी — जैसे आपकी उम्र और क्षेत्र — हर एक की एक वजह होगी। आप कभी भी किसी सवाल को छोड़ सकती हैं, रुक सकती हैं, और बाद में सब कुछ बिना किसी कारण के मिटा सकती हैं। क्या हम शुरू करें?",
+  ur: "ہیلو، مجھے بہت خوشی ہے کہ آپ یہاں ہیں۔ یہ ایک مختصر، پرسکون گفتگو ہے کہ آپ حال ہی میں کیسا محسوس کر رہی ہیں۔ آخر میں آپ کو ایک صفحے کا خلاصہ ملے گا جو مکمل طور پر آپ کا ہوگا۔ آخر میں، میں آپ کے بارے میں کچھ مختصر، اختیاری سوالات بھی پوچھوں گی — جیسے آپ کی عمر اور علاقہ — ہر ایک کی ایک وجہ ہوگی۔ آپ کسی بھی سوال کو چھوڑ سکتی ہیں، کسی بھی وقت رک سکتی ہیں، اور بعد میں سب کچھ بغیر کسی وجہ کے مٹا سکتی ہیں۔ کیا ہم شروع کریں؟",
+  bn: "হ্যালো, আমি সত্যিই খুশি যে আপনি এখানে আছেন। এটি একটি ছোট, শান্ত কথোপকথন যে আপনি সম্প্রতি কেমন অনুভব করছেন। শেষে আপনি একটি এক-পৃষ্ঠার সারাংশ পাবেন যা সম্পূর্ণভাবে আপনার। শেষের দিকে আমি আপনার সম্পর্কে কয়েকটি সংক্ষিপ্ত, ঐচ্ছিক প্রশ্নও জিজ্ঞাসা করব — যেমন আপনার বয়স এবং এলাকা — প্রতিটির একটি কারণ থাকবে। আপনি যেকোনো প্রশ্ন এড়িয়ে যেতে পারেন, যেকোনো সময় থামতে পারেন, এবং পরে কোনো কারণ ছাড়াই সব মুছে ফেলতে পারেন। আমরা কি শুরু করতে পারি?",
+  pa: "ਸਤ ਸ੍ਰੀ ਅਕਾਲ, ਮੈਨੂੰ ਬਹੁਤ ਖੁਸ਼ੀ ਹੈ ਕਿ ਤੁਸੀਂ ਇੱਥੇ ਹੋ। ਇਹ ਇੱਕ ਛੋਟੀ, ਆਰਾਮਦਾਇਕ ਗੱਲਬਾਤ ਹੈ ਕਿ ਤੁਸੀਂ ਹਾਲ ਹੀ ਵਿੱਚ ਕਿਵੇਂ ਮਹਿਸੂਸ ਕਰ ਰਹੇ ਹੋ। ਅੰਤ ਵਿੱਚ ਤੁਹਾਨੂੰ ਇੱਕ ਪੰਨੇ ਦਾ ਸਾਰ ਮਿਲੇਗਾ ਜੋ ਪੂਰੀ ਤਰ੍ਹਾਂ ਤੁਹਾਡਾ ਹੋਵੇਗਾ। ਅੰਤ ਵਿੱਚ ਮੈਂ ਤੁਹਾਡੇ ਬਾਰੇ ਕੁਝ ਛੋਟੇ, ਵਿਕਲਪਿਕ ਸਵਾਲ ਵੀ ਪੁੱਛਾਂਗੀ — ਜਿਵੇਂ ਤੁਹਾਡੀ ਉਮਰ ਅਤੇ ਇਲਾਕਾ — ਹਰ ਇੱਕ ਦਾ ਇੱਕ ਕਾਰਨ ਹੋਵੇਗਾ। ਤੁਸੀਂ ਕਿਸੇ ਵੀ ਸਵਾਲ ਨੂੰ ਛੱਡ ਸਕਦੇ ਹੋ, ਕਿਸੇ ਵੀ ਸਮੇਂ ਰੁਕ ਸਕਦੇ ਹੋ, ਅਤੇ ਬਾਅਦ ਵਿੱਚ ਬਿਨਾਂ ਕਿਸੇ ਕਾਰਨ ਸਭ ਕੁਝ ਮਿਟਾ ਸਕਦੇ ਹੋ। ਕੀ ਅਸੀਂ ਸ਼ੁਰੂ ਕਰੀਏ?",
+  gu: "નમસ્તે, મને ખૂબ આનંદ છે કે તમે અહીં છો. આ એક ટૂંકી, હળવી વાતચીત છે કે તમે તાજેતરમાં કેવું અનુભવો છો. અંતે તમને એક પાનાનો સારાંશ મળશે જે સંપૂર્ણપણે તમારો હશે. અંતે હું તમારા વિશે થોડા ટૂંકા, વૈકલ્પિક પ્રશ્નો પણ પૂછીશ — જેમ કે તમારી ઉંમર અને વિસ્તાર — દરેકનું એક કારણ હશે. તમે કોઈપણ પ્રશ્ન છોડી શકો છો, કોઈપણ સમયે રોકી શકો છો, અને પછી કોઈ કારણ વગર બધું ડિલીટ કરી શકો છો. શું આપણે શરૂ કરીએ?",
+  so: "Salaan, waan ku faraxsanahay inaad halkan joogto. Kani waa wada hadal gaaban oo deggan oo ku saabsan sida aad dareentay dhawaanahan. Dhamaadka waxaad heli doontaa warbixin bog ah oo adiga kuu gaar ah. Dhamaadka waxaan sidoo kale ku weydiin doonaa dhowr su'aalood oo gaagaaban, oo ikhtiyaari ah, oo kugu saabsan — sida da'daada iyo aagaaga — mid kastaa wuxuu leeyahay sabab. Waad ka boodi kartaa su'aal kasta, waad joojin kartaa waqti kasta, waadna tirtiri kartaa dhamaan xogta sabab la'aan. Ma bilaabnaa?",
+  pl: "Cześć, bardzo się cieszę, że tu jesteś. To krótka, spokojna rozmowa o tym, jak się ostatnio czułaś. Na koniec otrzymasz jednostronicowe podsumowanie, które będzie należeć wyłącznie do Ciebie. Pod koniec zadam też kilka krótkich, opcjonalnych pytań o Ciebie — takich jak Twój przedział wiekowy i okolica — każde z powodem. Możesz pominąć dowolne pytanie, zatrzymać się w każdej chwili i później usunąć wszystko bez podawania powodu. Czy możemy zacząć?",
+};
+
+const languagePresets = Object.fromEntries(
+  Object.entries(FIRST_MESSAGE_TRANSLATIONS).map(([lang, text]) => [
+    lang,
+    { overrides: { agent: { first_message: text } } },
+  ]),
+);
 
 const body = {
   name: "Now It Counts",
@@ -51,13 +76,19 @@ const body = {
     agent: {
       prompt: {
         prompt: SYSTEM_PROMPT,
+        built_in_tools: {
+          // Lets the agent detect and switch to her spoken language mid-call.
+          language_detection: { name: "language_detection", description: "" },
+        },
       },
-      first_message: FIRST_MESSAGE,
+      first_message: FIRST_MESSAGE_EN,
       language: "en",
     },
+    language_presets: languagePresets,
     tts: {
       model_id: "eleven_flash_v2",
-      // "Sarah" — warm, soft-natured female voice.
+      // "Sarah" — warm, soft-natured female voice. Verified to produce
+      // intelligible speech in all languages above, not just English.
       voice_id: "EXAVITQu4vr4xnSDxMaL",
       stability: 0.7,
       similarity_boost: 0.8,

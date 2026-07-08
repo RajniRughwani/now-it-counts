@@ -102,10 +102,14 @@ function VoiceSessionInner() {
           <>
             <Question>Whenever you&apos;re ready, just say hello.</Question>
             <Soft>
-              This is a spoken version of the same gentle conversation — about
-              six minutes, every question optional, nothing kept after you
-              finish. You&apos;ll need to allow microphone access.
+              This is a spoken version of the same gentle conversation — every
+              question optional, nothing kept after you finish. You&apos;ll
+              need to allow microphone access.
             </Soft>
+            <p className="text-xs text-muted mb-4">
+              Speaks English, Hindi, and Polish fluently — and will try its
+              best in several other languages too.
+            </p>
             <PrimaryButton onClick={start}>🎙️ Start talking</PrimaryButton>
             {micError && <p className="text-sm text-rose-deep mt-3">{micError}</p>}
           </>
