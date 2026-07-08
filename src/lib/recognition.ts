@@ -1,5 +1,5 @@
 /**
- * Constella — the recognition rule (safety-critical).
+ * Now It Counts — the recognition rule (safety-critical).
  *
  * Rules compute the signal; the LLM only phrases. Non-hallucinating by design.
  *

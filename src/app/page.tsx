@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
       <div className="gentle-in max-w-xl text-center">
-        <p className="text-sm uppercase tracking-[0.3em] text-muted mb-4">Constella</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-muted mb-4">Now It Counts</p>
         <h1 className="text-3xl sm:text-5xl font-medium leading-tight mb-4">
           You&apos;ve been describing this for years.
           <br />

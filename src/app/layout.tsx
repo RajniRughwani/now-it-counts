@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Constella — Now It Counts",
+  title: "Now It Counts",
   description:
     "You've been describing this for years. Now it counts. A gentle conversation that helps you recognise what your body might be telling you — and leaves you with a GP-ready summary you own.",
 };

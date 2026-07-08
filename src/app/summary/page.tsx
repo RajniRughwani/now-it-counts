@@ -59,7 +59,7 @@ export default function SummaryPage() {
   return (
     <main className="min-h-screen flex flex-col items-center px-4 py-8 gap-6">
       <header className="w-full max-w-xl flex items-center justify-between print:hidden">
-        <span className="font-medium tracking-wide">Constella</span>
+        <span className="font-medium tracking-wide">Now It Counts</span>
         <button
           type="button"
           onClick={onDelete}

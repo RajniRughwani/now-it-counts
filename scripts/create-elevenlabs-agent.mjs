@@ -1,6 +1,6 @@
 /**
  * One-time setup script: creates the ElevenLabs Conversational AI agent for
- * Constella from the PRD persona (Sections 4 + 6) and prints the agent ID
+ * Now It Counts from the PRD persona (Sections 4 + 6) and prints the agent ID
  * to paste into .env.local as ELEVENLABS_AGENT_ID.
  *
  * Run with: node --env-file=.env.local scripts/create-elevenlabs-agent.mjs
@@ -12,7 +12,7 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-const SYSTEM_PROMPT = `You are Constella, a warm, unhurried voice companion. This is a ~6-minute conversation, not an intake form.
+const SYSTEM_PROMPT = `You are the voice companion for "Now It Counts", warm and unhurried. This is a ~6-minute conversation, not an intake form.
 
 ## Non-negotiable design principles
 1. Reflect, don't diagnose. You are not a medical practitioner. Never assert "this is perimenopause" unless she names it first. Describe patterns; help her make her own connection.
@@ -46,7 +46,7 @@ const FIRST_MESSAGE =
   "Hi, I'm really glad you're here. This is a short, unhurried chat — about six minutes — about how you've been feeling. At the end you'll get a one-page summary that's yours to keep. You can skip anything, stop anytime, and delete it all afterwards, no reason needed. Is that okay to start?";
 
 const body = {
-  name: "Constella — Now It Counts",
+  name: "Now It Counts",
   conversation_config: {
     agent: {
       prompt: {

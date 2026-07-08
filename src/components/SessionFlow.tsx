@@ -132,7 +132,7 @@ export default function SessionFlow() {
   return (
     <main className="min-h-screen flex flex-col items-center px-4 py-8">
       <header className="w-full max-w-xl flex items-center justify-between mb-6">
-        <span className="font-medium tracking-wide">Constella</span>
+        <span className="font-medium tracking-wide">Now It Counts</span>
         <button
           type="button"
           onClick={onDeleteEverything}

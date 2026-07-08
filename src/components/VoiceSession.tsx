@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Voice conversation with Constella via ElevenLabs. Text flow remains the
+ * Voice conversation with Now It Counts via ElevenLabs. Text flow remains the
  * demo backbone; this is the voice option promised on the landing page.
  */
 
@@ -48,7 +48,7 @@ function VoiceSessionInner() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
       <Card>
-        <PartLabel>Talk to Constella</PartLabel>
+        <PartLabel>Talk it through</PartLabel>
 
         {status === "disconnected" && (
           <>
@@ -76,7 +76,7 @@ function VoiceSessionInner() {
 
         {status === "connected" && (
           <>
-            <Question>{isSpeaking ? "Constella is speaking…" : "Listening…"}</Question>
+            <Question>{isSpeaking ? "Speaking…" : "Listening…"}</Question>
             <Soft>Talk naturally — skip anything, or just say you&apos;d rather stop.</Soft>
             <div
               className={`mx-auto my-6 w-24 h-24 rounded-full transition-all duration-300 ${
