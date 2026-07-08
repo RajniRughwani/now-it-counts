@@ -6,9 +6,9 @@ export default function Home() {
       <div className="gentle-in max-w-xl text-center">
         <p className="text-sm uppercase tracking-[0.3em] text-muted mb-4">Now It Counts</p>
         <h1 className="text-3xl sm:text-5xl font-medium leading-tight mb-4">
-          You&apos;ve been describing this for years.
+          You&apos;ve been trying to make sense of it for years.
           <br />
-          <span className="text-rose">Now it counts.</span>
+          <span className="text-rose">Could your symptoms be connected?</span>
         </h1>
         <p className="text-base sm:text-lg text-muted leading-relaxed mb-10">
           A gentle, unhurried conversation about how you&apos;ve really been —
