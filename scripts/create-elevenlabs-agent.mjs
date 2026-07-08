@@ -57,7 +57,9 @@ const body = {
     },
     tts: {
       model_id: "eleven_flash_v2",
-      stability: 0.6,
+      // "Sarah" — warm, soft-natured female voice.
+      voice_id: "EXAVITQu4vr4xnSDxMaL",
+      stability: 0.7,
       similarity_boost: 0.8,
     },
   },
