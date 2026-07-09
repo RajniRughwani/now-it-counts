@@ -27,9 +27,13 @@ export interface SymptomLine {
   duration: string;
 }
 
+export type PillTone = "cycle" | "mild" | "moderate" | "severe";
+
 export interface ClinicianRow {
   term: string;
-  detail: string;
+  /** Text shown inside the pill badge, e.g. "Mild · ~weeks" or "Still regular". */
+  pillLabel: string;
+  pillTone: PillTone;
 }
 
 export interface Acknowledgement {
@@ -41,7 +45,7 @@ export interface RecordCardData {
   acknowledgement: Acknowledgement;
   gpOneThing: string | null;
   symptomLines: SymptomLine[];
-  lifeImpactLine: string | null;
+  lifeAreas: string[];
   clinicianRows: ClinicianRow[];
   ageBand: string | null;
   previouslySeen: boolean | null;
@@ -163,30 +167,36 @@ function buildClinicianRows(data: SessionData): ClinicianRow[] {
   if (data.menstrualChange && data.menstrualChange !== "prefer_not_to_say") {
     rows.push({
       term: "Menstrual / cycle change",
-      detail: `${MENSTRUAL_CHANGE_LABELS[data.menstrualChange]}, ${duration}`,
+      pillLabel: MENSTRUAL_CHANGE_LABELS[data.menstrualChange],
+      pillTone: "cycle",
     });
   }
 
-  const impactLabel: Record<Impact, string> = {
+  const impactWord: Record<Impact, string> = {
+    a_lot: "Severe",
+    quite_a_bit: "Moderate",
+    a_little: "Mild",
+    not_at_all: "Not present",
+  };
+  const impactTone: Record<Impact, PillTone> = {
     a_lot: "severe",
     quite_a_bit: "moderate",
     a_little: "mild",
-    not_at_all: "not present",
+    not_at_all: "mild",
   };
 
   for (const s of ALL_SYMPTOMS) {
     const impact = data.impacts[s.id] as Impact | undefined;
     if (impact) {
-      rows.push({ term: s.clinicalName, detail: `${duration}, ${impactLabel[impact]}` });
+      rows.push({
+        term: s.clinicalName,
+        pillLabel: `${impactWord[impact]} · ${duration}`,
+        pillTone: impactTone[impact],
+      });
     }
   }
 
   return rows;
-}
-
-function buildLifeImpactLine(data: SessionData): string | null {
-  if (data.lifeAreas.length === 0) return null;
-  return `This has been affecting my ${data.lifeAreas.join(", ")}.`;
 }
 
 export function buildRecordCard(data: SessionData, recognition: RecognitionResult): RecordCardData {
@@ -220,7 +230,7 @@ export function buildRecordCard(data: SessionData, recognition: RecognitionResul
     acknowledgement: buildAcknowledgement(data, recognition, redFlags),
     gpOneThing: data.gpOneThing,
     symptomLines: buildSymptomLines(data),
-    lifeImpactLine: buildLifeImpactLine(data),
+    lifeAreas: data.lifeAreas,
     clinicianRows: buildClinicianRows(data),
     ageBand: data.ageBand,
     previouslySeen: data.spokenToAnyone === null ? null : data.spokenToAnyone === "yes",

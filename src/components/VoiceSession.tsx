@@ -21,6 +21,14 @@ interface TranscriptTurn {
   text: string;
 }
 
+/** Break a long spoken turn into sentence-sized bullets instead of one wall of text. */
+function splitIntoSentences(text: string): string[] {
+  return text
+    .split(/(?<=[.!?])\s+(?=[A-Z0-9"'])/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 export default function VoiceSession() {
   return (
     <ConversationProvider>
@@ -154,20 +162,23 @@ function VoiceSessionInner() {
             </div>
 
             {/* Live captions — visible proof it's working, per team feedback */}
-            <div className="min-h-[4.5rem] w-full text-sm leading-relaxed text-left space-y-1 mb-4">
+            <div className="min-h-[4.5rem] w-full text-sm leading-relaxed text-left space-y-2 mb-4">
               {captions.length === 0 && (
                 <p className="text-muted italic">Listening for your voice…</p>
               )}
-              {captions.map((c, i) => (
-                <p
-                  key={i}
-                  className={`gentle-in ${
-                    c.role === "ai" ? "text-foreground" : "text-rose-deep font-medium"
-                  }`}
-                >
-                  {c.text}
-                </p>
-              ))}
+              {captions.map((c, i) =>
+                c.role === "ai" ? (
+                  <ul key={i} className="gentle-in list-disc pl-5 space-y-1 text-foreground">
+                    {splitIntoSentences(c.text).map((sentence, j) => (
+                      <li key={j}>{sentence}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p key={i} className="gentle-in text-rose-deep font-medium">
+                    {c.text}
+                  </p>
+                ),
+              )}
             </div>
 
             <button

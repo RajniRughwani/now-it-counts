@@ -11,11 +11,17 @@
   --rose-soft: #e5ddee;
   --rose-mist: #f5f2f8;
   --pink: #ec5797; /* campaign flyer's headline highlight pink */
+  --pink-soft: #f9dce9; /* severity pill bg — "severe" */
+  --pink-deep: #ad1f5c; /* severity pill text — "severe" */
   --sage: #8fae8c;
   --sage-soft: #e6efe4;
+  --sage-deep: #4f7a56; /* severity pill text — "mild" */
+  --apricot-deep: #a06a2e; /* severity pill text — "moderate" */
   --lavender: #b9a9dd;
   --lavender-soft: #efeaf8;
+  --lavender-deep: #6a4f9c; /* cycle-status pill text */
   --apricot-soft: #fbeadb;
+  --amber-deep: #5f3d1c; /* red-flag acknowledgement background */
   --muted: #8c8078;
   --line: #ecdfd6;
 }
@@ -29,15 +35,22 @@
   --color-rose-soft: var(--rose-soft);
   --color-rose-mist: var(--rose-mist);
   --color-pink: var(--pink);
+  --color-pink-soft: var(--pink-soft);
+  --color-pink-deep: var(--pink-deep);
   --color-sage: var(--sage);
   --color-sage-soft: var(--sage-soft);
+  --color-sage-deep: var(--sage-deep);
+  --color-apricot-deep: var(--apricot-deep);
   --color-lavender: var(--lavender);
   --color-lavender-soft: var(--lavender-soft);
+  --color-lavender-deep: var(--lavender-deep);
   --color-apricot-soft: var(--apricot-soft);
+  --color-amber-deep: var(--amber-deep);
   --color-muted: var(--muted);
   --color-line: var(--line);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-lora);
 }
 
 body {
