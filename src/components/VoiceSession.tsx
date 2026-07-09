@@ -33,6 +33,7 @@ function VoiceSessionInner() {
   const router = useRouter();
   const [micError, setMicError] = useState<string | null>(null);
   const [finishing, setFinishing] = useState(false);
+  const [extractError, setExtractError] = useState<"empty" | "failed" | null>(null);
   const [captions, setCaptions] = useState<TranscriptTurn[]>([]);
   const transcriptRef = useRef<TranscriptTurn[]>([]);
 
@@ -47,9 +48,11 @@ function VoiceSessionInner() {
 
   const finish = useCallback(async () => {
     setFinishing(true);
+    setExtractError(null);
     const transcript = transcriptRef.current;
     if (transcript.length === 0) {
-      router.push("/");
+      setFinishing(false);
+      setExtractError("empty");
       return;
     }
     try {
@@ -60,18 +63,21 @@ function VoiceSessionInner() {
       });
       const data = await res.json();
       if (!res.ok || data.error) {
-        router.push("/");
+        setFinishing(false);
+        setExtractError("failed");
         return;
       }
       saveSession(data);
       router.push("/summary");
     } catch {
-      router.push("/");
+      setFinishing(false);
+      setExtractError("failed");
     }
   }, [router]);
 
   const start = useCallback(async () => {
     setMicError(null);
+    setExtractError(null);
     transcriptRef.current = [];
     setCaptions([]);
     try {
@@ -91,6 +97,11 @@ function VoiceSessionInner() {
     finish();
   }, [conversation, finish]);
 
+  /** Retry just the extraction step — the conversation already happened, no need to redo it. */
+  const retryExtraction = useCallback(() => {
+    finish();
+  }, [finish]);
+
   const { status, isSpeaking } = conversation;
 
   return (
@@ -98,7 +109,7 @@ function VoiceSessionInner() {
       <Card>
         <PartLabel>Talk it through</PartLabel>
 
-        {status === "disconnected" && !finishing && (
+        {status === "disconnected" && !finishing && !extractError && (
           <>
             <Question>Whenever you&apos;re ready, just say hello.</Question>
             <Soft>
@@ -181,6 +192,37 @@ function VoiceSessionInner() {
               <span className="w-2 h-2 rounded-full bg-rose animate-bounce [animation-delay:0ms]" />
               <span className="w-2 h-2 rounded-full bg-rose animate-bounce [animation-delay:150ms]" />
               <span className="w-2 h-2 rounded-full bg-rose animate-bounce [animation-delay:300ms]" />
+            </div>
+          </>
+        )}
+
+        {extractError === "empty" && !finishing && (
+          <>
+            <Question>We didn&apos;t catch anything to summarise.</Question>
+            <Soft>
+              Nothing was kept from this attempt. Whenever you&apos;re ready,
+              you can start again.
+            </Soft>
+            <PrimaryButton onClick={start}>Try again</PrimaryButton>
+          </>
+        )}
+
+        {extractError === "failed" && !finishing && (
+          <>
+            <Question>We couldn&apos;t put your summary together just now.</Question>
+            <Soft>
+              Nothing you said has been lost. You can try again, or start a
+              fresh conversation.
+            </Soft>
+            <div className="flex gap-3 flex-wrap">
+              <PrimaryButton onClick={retryExtraction}>Try again</PrimaryButton>
+              <button
+                type="button"
+                onClick={start}
+                className="rounded-full border border-rose text-rose hover:bg-rose-mist px-6 py-3 text-sm font-medium transition-colors"
+              >
+                Start a new conversation
+              </button>
             </div>
           </>
         )}

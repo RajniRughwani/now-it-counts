@@ -1,71 +1,84 @@
 /**
  * Health summary generation — the screen-vs-LLM split, enforced server-side:
  *
- *   1. The RULES compute the recognition signal (computeRecognition).
- *   2. Claude ONLY phrases — grounded in the curated clinical reference,
- *      and hard-gated: the word "perimenopause" is only permitted in the
- *      prompt when the rules allow it (or she named it first).
+ *   1. The RULES compute the recognition signal (computeRecognition) and the
+ *      entire record card (buildRecordCard) — deterministic, no LLM.
+ *   2. Claude generates ONLY the "for the group chat" share card. Everything
+ *      else on the card (the actual medical-adjacent content) is built from
+ *      a fixed template + a fixed recommendation table, never freely
+ *      generated, so first-person voice, no-diagnosis language, and reading
+ *      level are guaranteed by construction rather than by prompting alone.
  *
  * Session data arrives in the request and is never stored server-side.
  */
 
 import Anthropic from "@anthropic-ai/sdk";
 import { computeRecognition, GUIDANCE } from "@/lib/recognition";
-import { CLINICAL_REFERENCE } from "@/lib/reference";
+import { buildRecordCard, RecordCardData } from "@/lib/recordCard";
 import { SessionData } from "@/lib/session";
-import {
-  ALL_SYMPTOMS,
-  IMPACT_LABELS,
-  Impact,
-  MENSTRUAL_CHANGE_LABELS,
-} from "@/lib/symptoms";
 
-const SYSTEM_PROMPT = `You write one-page, practitioner-ready health summaries for "DOT", a perimenopause recognition companion. Your job is PHRASING ONLY — a rules engine has already computed what may and may not be said, and at what confidence. You never diagnose, never express alarm, and never assert "this is perimenopause" as fact — always "a signal worth exploring, not a diagnosis," always suggesting a conversation with a healthcare practitioner.
+const SHARE_CARD_SYSTEM_PROMPT = `You write a single short "share with a friend" message for "DOT", a perimenopause recognition companion. This is the ONLY free-generated text in the whole product; everything else on her record is a fixed template.
 
-Voice: warm, plain, dignified. Rooted in her own words. Written so any healthcare practitioner — GP, practice nurse, pharmacist, community health worker — will recognise the clinical vocabulary, but a friend could read it too.
+Hard rules, no exceptions:
+- First person only. Never "she", "her", "her account" — this is HER own message, written as if she wrote it herself.
+- Never diagnose. Never say "you have perimenopause", "you're suffering from", or "it's likely you have" — those exact patterns and anything equivalent are banned.
+- No clinical jargon, no health anxiety, warm and plain, reading age around 9-11.
+- 2-3 sentences, e.g. "This is what I've been dealing with, took me 5 minutes, here's the link."`;
 
-Life context she shares (a typical day, her biggest worry) is narrative colour only. It must never be used to explain away, downgrade, or contextualise a symptom's significance in either direction — the recognition confidence is fixed by the rules engine before it ever sees this content.
-
-${CLINICAL_REFERENCE}`;
-
-interface SummaryResult {
-  gpSummary: string;
+interface ShareCardResult {
   shareCard: string;
 }
 
-function describeSymptoms(data: SessionData): string {
-  const lines: string[] = [];
-  if (data.menstrualChange) {
-    lines.push(
-      `- Menstrual/cycle change: ${MENSTRUAL_CHANGE_LABELS[data.menstrualChange]}`,
-    );
+async function generateShareCard(
+  data: SessionData,
+  gate: string,
+): Promise<string | null> {
+  const userPrompt = `Write her share-with-a-friend message from this structured session data.
+
+GATE (authoritative, do not override): ${gate}
+
+What matters most to her (verbatim): ${data.whatMatters ?? "(skipped)"}
+Her story (verbatim): ${data.story ?? "(skipped)"}
+The one thing she wants a healthcare practitioner to understand (verbatim): ${data.gpOneThing ?? "(skipped)"}
+
+Return JSON with one field, "shareCard", containing only the message text. Do not use em dashes; use commas, periods, or colons instead.`;
+
+  try {
+    const client = new Anthropic({ maxRetries: 5 });
+    const response = await client.messages.create({
+      model: "claude-opus-4-8",
+      max_tokens: 1024,
+      thinking: { type: "adaptive" },
+      system: SHARE_CARD_SYSTEM_PROMPT,
+      messages: [{ role: "user", content: userPrompt }],
+      output_config: {
+        format: {
+          type: "json_schema",
+          schema: {
+            type: "object",
+            properties: { shareCard: { type: "string" } },
+            required: ["shareCard"],
+            additionalProperties: false,
+          },
+        },
+      },
+    });
+
+    const textBlock = response.content.find((b) => b.type === "text");
+    if (!textBlock || textBlock.type !== "text") return null;
+    const result = JSON.parse(textBlock.text) as ShareCardResult;
+    return result.shareCard;
+  } catch (err) {
+    // The share card is a nice-to-have, not the record itself — a failure
+    // here must never take down the whole summary.
+    console.error("Share card generation failed:", err);
+    return null;
   }
-  for (const s of ALL_SYMPTOMS) {
-    const impact = data.impacts[s.id] as Impact | undefined;
-    if (impact) {
-      lines.push(`- ${s.clinicalName}: present, impact "${IMPACT_LABELS[impact]}"`);
-    }
-  }
-  if (data.otherSymptoms.length > 0) {
-    lines.push(
-      `- Also mentioned, not on the standard list (record verbatim, do not force onto the list above): ${data.otherSymptoms.join("; ")}`,
-    );
-  }
-  if (data.bothersMost.length > 0) {
-    const names = data.bothersMost
-      .map((id) => ALL_SYMPTOMS.find((s) => s.id === id)?.clinicalName)
-      .filter(Boolean);
-    lines.push(`- She says these bother her MOST: ${names.join(", ")}`);
-  }
-  return lines.length > 0 ? lines.join("\n") : "- (no symptoms flagged)";
 }
 
-/** Life context — narrative colour only, see the firewall note in the gate. */
-function describeContext(data: SessionData): string {
-  const lines: string[] = [];
-  if (data.contextTypicalDay) lines.push(`- A typical day: ${data.contextTypicalDay}`);
-  if (data.contextBiggestWorry) lines.push(`- Biggest worry right now: ${data.contextBiggestWorry}`);
-  return lines.length > 0 ? lines.join("\n") : "- (skipped)";
+export interface SummaryResponse {
+  card: RecordCardData;
+  shareCard: string | null;
 }
 
 export async function POST(request: Request) {
@@ -93,86 +106,14 @@ export async function POST(request: Request) {
   const mayMention = effectiveLevel !== "none";
 
   const gate = mayMention
-    ? `The recognition rules PERMIT naming perimenopause as a possibility, at "${effectiveLevel}" confidence. Use this exact guidance line (light rephrasing for tone is fine, do not change its substance or soften/strengthen its confidence): "${guidance}"`
-    : `The recognition rules DO NOT permit the word "perimenopause" (or "menopause") ANYWHERE in your output. Nothing was reported to build guidance on. Validate that whatever she did share is real and worth a conversation with a healthcare practitioner, without naming perimenopause.`;
+    ? `Perimenopause may be named as a possibility, at "${effectiveLevel}" confidence. If you reference it, stay consistent with this line (do not strengthen or soften it): "${guidance}"`
+    : `Do NOT use the word "perimenopause" or "menopause" anywhere in your output. Nothing was reported to build guidance on.`;
 
-  const userPrompt = `Write her summary from this structured session data.
+  // The card itself never touches an LLM — it cannot fail the way a
+  // generation call can, so it's computed first and unconditionally.
+  const card = buildRecordCard(data, recognition);
+  const shareCard = await generateShareCard(data, gate);
 
-## Recognition engine output (authoritative — do not override)
-- Level: ${effectiveLevel}
-- Anchor (cycle change signal) present: ${recognition.anchorPresent}
-- Specific signals present: ${recognition.specificPresent.join(", ") || "none"}
-- Off-list symptoms reported: ${recognition.otherSymptomsPresent}
-- Gentle flags to include calmly: ${recognition.gentleFlags.join(" | ") || "none"}
-- GATE: ${gate}
-- Never state or imply a diagnosis, regardless of level. Always frame as "a signal worth exploring, not a diagnosis," and always suggest a conversation with a healthcare practitioner.
-
-## Her life context (narrative colour ONLY — read this carefully)
-${describeContext(data)}
-CRITICAL FIREWALL: the above is included only to make the summary feel human and to add colour to the health summary. It must NEVER be used to explain away, downgrade, minimise, or contextualise a symptom (e.g. never write anything like "given how busy/stressed she is, this is probably just X"). It must not soften or strengthen the GATE above in either direction — the recognition level is fixed by the rules engine and is computed without any knowledge of this context.
-
-## Her session
-What matters most to her (verbatim, OPENS the summary): ${data.whatMatters ?? "(skipped)"}
-Her story (verbatim): ${data.story ?? "(skipped)"}
-Symptoms:
-${describeSymptoms(data)}
-Duration: ${data.duration ?? "(skipped)"}
-Life areas affected: ${data.lifeAreas.join(", ") || "(skipped)"}
-Spoken to anyone: ${data.spokenToAnyone ?? "(skipped)"}
-What she was told (verbatim): ${data.toldVerbatim ?? "(n/a)"}
-What held her back (verbatim): ${data.heldBack ?? "(n/a)"}
-The one thing she wants a healthcare practitioner to understand (verbatim): ${data.gpOneThing ?? "(skipped)"}
-
-## Output format
-Return JSON with exactly two fields:
-
-"gpSummary": her one-page record in Markdown. Structure:
-  1. Open with the "what matters to me" line and, if given, the one thing she wants understood (her words, quoted).
-  2. "What's been happening" — the symptom pattern in language a healthcare practitioner will recognise, with duration and impact.
-  3. "What bothers me most" — her ranking, centre stage.
-  4. "My journey so far" — what she's been told / what held her back, verbatim where given.
-  5. "Questions worth asking" — 2-4 gentle, practical questions for the appointment (respect the GATE).
-  Keep it genuinely one page. No diagnosis. No alarm. Do not use em dashes anywhere in the output text; use commas, periods, or colons instead.
-
-"shareCard": a short, warm 2-3 sentence version for passing to a friend or the group chat — "this is what I've been dealing with… took me 5 minutes, here's the link." First person, her tone, no clinical jargon, no health anxiety. Respect the GATE here too.`;
-
-  try {
-    // Extra retries: 529 overloads are transient and must not break a live demo.
-    const client = new Anthropic({ maxRetries: 5 });
-    const response = await client.messages.create({
-      model: "claude-opus-4-8",
-      max_tokens: 4096,
-      thinking: { type: "adaptive" },
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userPrompt }],
-      output_config: {
-        format: {
-          type: "json_schema",
-          schema: {
-            type: "object",
-            properties: {
-              gpSummary: { type: "string" },
-              shareCard: { type: "string" },
-            },
-            required: ["gpSummary", "shareCard"],
-            additionalProperties: false,
-          },
-        },
-      },
-    });
-
-    const textBlock = response.content.find((b) => b.type === "text");
-    if (!textBlock || textBlock.type !== "text") {
-      throw new Error("No text in model response");
-    }
-    const result = JSON.parse(textBlock.text) as SummaryResult;
-
-    return Response.json({ ...result, recognition });
-  } catch (err) {
-    console.error("Summary generation failed:", err);
-    return Response.json(
-      { error: "summary_failed", recognition },
-      { status: 500 },
-    );
-  }
+  const body: SummaryResponse = { card, shareCard };
+  return Response.json(body);
 }
