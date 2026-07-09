@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 /* DOT — warm, pastel, unhurried. Warmth, trust, honesty, organic. */
-/* Accent (--rose-*) matches the "Your Story Matters" campaign pink (#EC5797); background stays the app's own warm cream. */
+/* Accent (--rose-*) matches the "Your Story Matters" campaign's deep aubergine (#20132F, the flyer's true brand color, not its pink text accent); background stays the app's own warm cream. */
 :root {
   --background: #fbf6f0; /* warm cream */
   --foreground: #3a3330; /* warm charcoal */
   --card: #ffffff;
-  --rose: #ec5797; /* primary action — campaign pink */
-  --rose-deep: #df2675;
-  --rose-soft: #f5d6e3;
-  --rose-mist: #faeff4;
+  --rose: #362050; /* primary action — campaign aubergine, lightened for button legibility */
+  --rose-deep: #201131; /* hover — the flyer's exact background color */
+  --rose-soft: #e5ddee;
+  --rose-mist: #f5f2f8;
   --sage: #8fae8c;
   --sage-soft: #e6efe4;
   --lavender: #b9a9dd;
