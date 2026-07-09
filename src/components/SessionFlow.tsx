@@ -176,30 +176,21 @@ export default function SessionFlow() {
       {stage === "consent" && (
         <Card>
           <PartLabel>Before we start</PartLabel>
-          <Question>A few things, said plainly.</Question>
+          <Question>30 seconds, promise.</Question>
           <div className="space-y-3 text-[15px] leading-relaxed mb-6">
+            <p>This is a chat, not a quiz. Skip anything, stop anytime.</p>
             <p>
-              This is a short, unhurried conversation about how you&apos;ve
-              been feeling, at whatever pace suits you.
+              You&apos;ll leave with <strong>the words</strong>: for the GP,
+              the pharmacy, the group chat.
             </p>
             <p>
-              At the end you&apos;ll get a <strong>one-page summary you own</strong>,
-              written for whoever you trust: your GP, a nurse, a pharmacist, or a
-              clinician back home.
-            </p>
-            <p>
-              If you choose, your <strong>anonymised</strong> answers can join
-              thousands of others to build a picture of women&apos;s health across
-              the UK that doesn&apos;t currently exist.
+              Say yes below, and your answers join thousands of others,{" "}
+              <strong>anonymously</strong>, to build the evidence about
+              women&apos;s health the UK still doesn&apos;t have.
             </p>
             <p className="text-muted">
-              Near the end, we&apos;ll ask a handful of quick questions about
-              you (age band, ethnicity, area), each with a reason, all
-              optional. That&apos;s what turns your story into evidence.
-            </p>
-            <p className="text-muted">
-              Your rights: skip anything, stop any time, and delete everything
-              afterwards, no reason needed. No name required. No audio kept.
+              No name. No audio kept. One tap deletes everything, no reason
+              needed.
             </p>
           </div>
           <div className="flex items-center gap-4 flex-wrap">
