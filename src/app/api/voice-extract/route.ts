@@ -22,7 +22,7 @@ Safety-critical rule: only mark a symptom as reported if she clearly indicated i
 
 Two things to extract separately and NEVER conflate:
 - otherSymptomsReported: anything she reported that is NOT one of the defined SYMPTOM_IDS (e.g. urinary infections she describes in her own words if not captured by the "urinary" id, headaches, skin changes, anything). Record each briefly in HER words. Do not force an off-list mention into one of the defined ids just because it seems related.
-- contextTypicalDay / contextBiggestWorry: her answers to the two OPTIONAL opening context questions ("what does a typical day look like", "what's your biggest worry right now"), verbatim or close to it. These are for the human picture only — do not let them influence which symptoms you mark as present.
+- contextTypicalDay / contextBiggestWorry: her answers to the two OPTIONAL opening context questions ("what does a typical day look like", "what weighs on you most right now" — offered as family / income / health / her own words). Record what she actually said, verbatim or close to it, whether she picked one of the three or answered in her own words. These are for the human picture only — do not let them influence which symptoms you mark as present.
 
 Extract only what was actually said. Use null / empty arrays for anything not covered in the conversation.`;
 
