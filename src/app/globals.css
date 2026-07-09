@@ -10,6 +10,7 @@
   --rose-deep: #201131; /* hover — the flyer's exact background color */
   --rose-soft: #e5ddee;
   --rose-mist: #f5f2f8;
+  --pink: #ec5797; /* campaign flyer's headline highlight pink */
   --sage: #8fae8c;
   --sage-soft: #e6efe4;
   --lavender: #b9a9dd;
@@ -27,6 +28,7 @@
   --color-rose-deep: var(--rose-deep);
   --color-rose-soft: var(--rose-soft);
   --color-rose-mist: var(--rose-mist);
+  --color-pink: var(--pink);
   --color-sage: var(--sage);
   --color-sage-soft: var(--sage-soft);
   --color-lavender: var(--lavender);

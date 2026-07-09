@@ -8,7 +8,7 @@ export default function Home() {
           Your story matters
         </p>
         <h1 className="mb-4">
-          <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium leading-[1.15]">
+          <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium leading-[1.15] text-pink">
             You&apos;ve been trying to make sense of it for years.
           </span>
           <span className="block whitespace-nowrap text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-rose leading-snug mt-3">
