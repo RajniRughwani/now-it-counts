@@ -1,5 +1,5 @@
 /**
- * GP summary generation — the screen-vs-LLM split, enforced server-side:
+ * Health summary generation — the screen-vs-LLM split, enforced server-side:
  *
  *   1. The RULES compute the recognition signal (computeRecognition).
  *   2. Claude ONLY phrases — grounded in the curated clinical reference,
@@ -20,9 +20,9 @@ import {
   MENSTRUAL_CHANGE_LABELS,
 } from "@/lib/symptoms";
 
-const SYSTEM_PROMPT = `You write one-page, GP-ready health summaries for "DOT", a perimenopause recognition companion. Your job is PHRASING ONLY — a rules engine has already computed what may and may not be said, and at what confidence. You never diagnose, never express alarm, and never assert "this is perimenopause" as fact — always "a signal worth exploring, not a diagnosis," always suggesting a GP conversation.
+const SYSTEM_PROMPT = `You write one-page, practitioner-ready health summaries for "DOT", a perimenopause recognition companion. Your job is PHRASING ONLY — a rules engine has already computed what may and may not be said, and at what confidence. You never diagnose, never express alarm, and never assert "this is perimenopause" as fact — always "a signal worth exploring, not a diagnosis," always suggesting a conversation with a healthcare practitioner.
 
-Voice: warm, plain, dignified. Rooted in her own words. Written so any healthcare professional — GP, practice nurse, pharmacist, community health worker — will recognise the clinical vocabulary, but a friend could read it too.
+Voice: warm, plain, dignified. Rooted in her own words. Written so any healthcare practitioner — GP, practice nurse, pharmacist, community health worker — will recognise the clinical vocabulary, but a friend could read it too.
 
 Life context she shares (a typical day, her biggest worry) is narrative colour only. It must never be used to explain away, downgrade, or contextualise a symptom's significance in either direction — the recognition confidence is fixed by the rules engine before it ever sees this content.
 
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
 
   const gate = mayMention
     ? `The recognition rules PERMIT naming perimenopause as a possibility, at "${effectiveLevel}" confidence. Use this exact guidance line (light rephrasing for tone is fine, do not change its substance or soften/strengthen its confidence): "${guidance}"`
-    : `The recognition rules DO NOT permit the word "perimenopause" (or "menopause") ANYWHERE in your output. Nothing was reported to build guidance on. Validate that whatever she did share is real and worth a GP conversation, without naming perimenopause.`;
+    : `The recognition rules DO NOT permit the word "perimenopause" (or "menopause") ANYWHERE in your output. Nothing was reported to build guidance on. Validate that whatever she did share is real and worth a conversation with a healthcare practitioner, without naming perimenopause.`;
 
   const userPrompt = `Write her summary from this structured session data.
 
@@ -105,11 +105,11 @@ export async function POST(request: Request) {
 - Off-list symptoms reported: ${recognition.otherSymptomsPresent}
 - Gentle flags to include calmly: ${recognition.gentleFlags.join(" | ") || "none"}
 - GATE: ${gate}
-- Never state or imply a diagnosis, regardless of level. Always frame as "a signal worth exploring, not a diagnosis," and always suggest a GP conversation.
+- Never state or imply a diagnosis, regardless of level. Always frame as "a signal worth exploring, not a diagnosis," and always suggest a conversation with a healthcare practitioner.
 
 ## Her life context (narrative colour ONLY — read this carefully)
 ${describeContext(data)}
-CRITICAL FIREWALL: the above is included only to make the summary feel human and to add colour to the GP summary. It must NEVER be used to explain away, downgrade, minimise, or contextualise a symptom (e.g. never write anything like "given how busy/stressed she is, this is probably just X"). It must not soften or strengthen the GATE above in either direction — the recognition level is fixed by the rules engine and is computed without any knowledge of this context.
+CRITICAL FIREWALL: the above is included only to make the summary feel human and to add colour to the health summary. It must NEVER be used to explain away, downgrade, minimise, or contextualise a symptom (e.g. never write anything like "given how busy/stressed she is, this is probably just X"). It must not soften or strengthen the GATE above in either direction — the recognition level is fixed by the rules engine and is computed without any knowledge of this context.
 
 ## Her session
 What matters most to her (verbatim, OPENS the summary): ${data.whatMatters ?? "(skipped)"}
@@ -121,14 +121,14 @@ Life areas affected: ${data.lifeAreas.join(", ") || "(skipped)"}
 Spoken to anyone: ${data.spokenToAnyone ?? "(skipped)"}
 What she was told (verbatim): ${data.toldVerbatim ?? "(n/a)"}
 What held her back (verbatim): ${data.heldBack ?? "(n/a)"}
-The one thing she wants a GP to understand (verbatim): ${data.gpOneThing ?? "(skipped)"}
+The one thing she wants a healthcare practitioner to understand (verbatim): ${data.gpOneThing ?? "(skipped)"}
 
 ## Output format
 Return JSON with exactly two fields:
 
 "gpSummary": her one-page record in Markdown. Structure:
   1. Open with the "what matters to me" line and, if given, the one thing she wants understood (her words, quoted).
-  2. "What's been happening" — the symptom pattern in GP-recognisable language, with duration and impact.
+  2. "What's been happening" — the symptom pattern in language a healthcare practitioner will recognise, with duration and impact.
   3. "What bothers me most" — her ranking, centre stage.
   4. "My journey so far" — what she's been told / what held her back, verbatim where given.
   5. "Questions worth asking" — 2-4 gentle, practical questions for the appointment (respect the GATE).

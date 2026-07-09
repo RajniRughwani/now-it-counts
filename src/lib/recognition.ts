@@ -7,7 +7,8 @@
  * the CONFIDENCE of the language scales with what's present:
  *
  *   - "confident": she has a CORE signal — the anchor (period changes) OR a
- *     specific signal (hot flushes / night sweats). Worth exploring with a GP.
+ *     specific signal (hot flushes / night sweats). Worth exploring with a
+ *     healthcare practitioner.
  *   - "soft": no core signal, but SOMETHING was reported — dismissed cluster,
  *     supporting symptoms, and/or symptoms outside the defined set. These are
  *     genuinely ambiguous alone (could be thyroid, mood, sleep, anaemia), so
@@ -48,7 +49,7 @@ export interface SymptomReport {
 }
 
 export type RecognitionLevel =
-  | "confident" // core (anchor or specific) present — worth exploring with a GP
+  | "confident" // core (anchor or specific) present — worth exploring with a healthcare practitioner
   | "soft" // dismissed/supporting/off-list only — real, but genuinely ambiguous
   | "none"; // nothing reported — nothing to build guidance on
 
@@ -74,7 +75,7 @@ export interface RecognitionResult {
    * drifting into diagnosis language or overstating/understating confidence.
    */
   guidance: string;
-  /** Non-alarming flags to carry into the GP summary (e.g. palpitations). */
+  /** Non-alarming flags to carry into the health summary (e.g. palpitations). */
   gentleFlags: string[];
 }
 
@@ -84,10 +85,10 @@ const SUPPORTING_IDS = new Set(SUPPORTING.map((s) => s.id));
 
 export const GUIDANCE: Record<RecognitionLevel, string> = {
   confident:
-    "This pattern is consistent with perimenopause: worth exploring with your GP.",
+    "This pattern is consistent with perimenopause: worth exploring with your healthcare practitioner.",
   soft:
-    "These symptoms can sometimes relate to perimenopause, among other things: worth raising with your GP to look into properly.",
-  none: "Not enough was shared to point to a pattern, but if anything felt off, it's worth mentioning to your GP.",
+    "These symptoms can sometimes relate to perimenopause, among other things: worth raising with your healthcare practitioner to look into properly.",
+  none: "Not enough was shared to point to a pattern, but if anything felt off, it's worth mentioning to your healthcare practitioner.",
 };
 
 /** A symptom counts as present if she tapped it, whatever the impact rating. */

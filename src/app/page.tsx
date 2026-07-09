@@ -19,7 +19,7 @@ export default function Home() {
           Say it how you&apos;d say it to a friend.
           <br />
           Five minutes, your own words. Leave with your next step, and a way
-          to talk about it, from your GP&apos;s office to the group chat.
+          to talk about it, from your healthcare practitioner to the group chat.
           <br />
           No diagnosis. No app. No lecture.
         </p>

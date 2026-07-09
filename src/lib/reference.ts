@@ -1,5 +1,5 @@
 /**
- * Curated reference doc that grounds the LLM when phrasing the GP summary.
+ * Curated reference doc that grounds the LLM when phrasing the health summary.
  * The LLM never decides the signal — the rules engine does. This doc gives
  * Claude validated framing so the summary reads in language any healthcare
  * professional will recognise, without hallucination.
@@ -32,18 +32,18 @@ export const CLINICAL_REFERENCE = `
 ## Language rules for the summary
 
 - Describe patterns; never diagnose. Preferred formulation: "a pattern worth
-  exploring with a GP" / "a signal worth exploring, not a diagnosis."
+  exploring with a healthcare practitioner" / "a signal worth exploring, not a diagnosis."
 - Use the word "perimenopause" ONLY when the recognition engine allows it
   (anchor or specific signal present) or when she used the word herself first.
 - Use her verbatim words in quotes where provided — they are the heart of the
   document.
-- Terms a GP will recognise: "vasomotor symptoms", "menstrual irregularity",
+- Terms a healthcare practitioner will recognise: "vasomotor symptoms", "menstrual irregularity",
   "cycle change", "symptom duration", "impact on daily functioning".
-- Questions worth asking a GP (when a signal is present): whether symptoms
+- Questions worth asking a healthcare practitioner (when a signal is present): whether symptoms
   could be perimenopausal; what the options are (lifestyle, HRT, non-hormonal);
   whether a symptom diary or MenoScale score would help the conversation.
 - When NO signal is present: the summary should validate that her symptoms are
-  real and worth taking seriously, suggest a GP conversation to explore causes
+  real and worth taking seriously, suggest a conversation with a healthcare practitioner to explore causes
   (thyroid function, iron levels, mood, sleep), and NOT mention perimenopause.
 - Never express alarm. Red-flag-adjacent items (e.g. palpitations) are noted
   calmly as "worth getting checked."

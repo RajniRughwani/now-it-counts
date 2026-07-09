@@ -54,7 +54,7 @@ export const MENSTRUAL_CHANGE_SIGNAL: ReadonlySet<MenstrualChange> = new Set([
 export interface SymptomDef {
   id: string;
   role: SymptomRole;
-  /** Behind-the-scenes clinical name (for the GP summary). */
+  /** Behind-the-scenes clinical name (for the health summary). */
   clinicalName: string;
   /** Exactly how it appears on screen — warm, conversational. */
   screenWording: string;
@@ -81,7 +81,7 @@ export const ANCHOR: SymptomDef = {
 /**
  * SPECIFIC SIGNALS — point clearly at perimenopause. Not the most common,
  * but when present they strongly suggest peri. Kept for diagnostic weight
- * and GP credibility.
+ * and clinical credibility.
  */
 export const SPECIFIC: SymptomDef[] = [
   {
@@ -145,7 +145,7 @@ export const DISMISSED: SymptomDef[] = [
 
 /**
  * SUPPORTING — add weight, worth including. Build the picture and matter
- * for the GP summary, but none alone says peri.
+ * for the health summary, but none alone says peri.
  */
 export const SUPPORTING: SymptomDef[] = [
   {
@@ -187,7 +187,7 @@ export const ALL_SYMPTOMS: SymptomDef[] = [ANCHOR, ...SPECIFIC, ...DISMISSED, ..
  * non-specific, late-appearing, or intrusive to ask about directly. They
  * don't get their own scripted question. If she brings one up unprompted,
  * it's still captured verbatim (see the off-list capture path) and shown in
- * the GP summary — it just doesn't drive the signal on its own.
+ * the health summary — it just doesn't drive the signal on its own.
  */
 export const EXCLUDED_FROM_RECOGNITION = [
   "skin quality",

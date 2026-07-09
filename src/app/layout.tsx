@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "DOT",
   description:
-    "You've been describing this for years. Your story matters. A gentle conversation that helps you recognise what your body might be telling you, and leaves you with a GP-ready summary you own.",
+    "You've been describing this for years. Your story matters. A gentle conversation that helps you recognise what your body might be telling you, and leaves you with a summary you own, ready for your healthcare practitioner.",
 };
 
 export default function RootLayout({

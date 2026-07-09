@@ -180,8 +180,8 @@ export default function SessionFlow() {
           <div className="space-y-3 text-[15px] leading-relaxed mb-6">
             <p>This is a chat, not a quiz. Skip anything, stop anytime.</p>
             <p>
-              You&apos;ll leave with <strong>the words</strong>: for the GP,
-              the pharmacy, the group chat.
+              You&apos;ll leave with <strong>the words</strong>: for the
+              healthcare practitioner, the pharmacy, the group chat.
             </p>
             <p>
               Say yes below, and your answers join thousands of others,{" "}
@@ -501,7 +501,7 @@ export default function SessionFlow() {
         <Card>
           <PartLabel>Your journey so far</PartLabel>
           <Question>
-            Have you spoken to a GP, or anyone, about any of this?
+            Have you spoken to a healthcare practitioner, or anyone, about any of this?
           </Question>
           <div className="flex flex-wrap gap-2 mb-6">
             <Chip
@@ -560,7 +560,7 @@ export default function SessionFlow() {
       {stage === "gpOneThing" && (
         <FreeTextScreen
           part="Your journey so far"
-          question="If your GP could know just one thing about what this has really been like, what would it be?"
+          question="If your healthcare practitioner could know just one thing about what this has really been like, what would it be?"
           soft="This goes at the top of your summary, in your words."
           text={text}
           setText={setText}

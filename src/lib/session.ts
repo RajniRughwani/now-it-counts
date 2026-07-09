@@ -15,14 +15,14 @@ export interface SessionData {
 
   // Part 1 — her story first (verbatim is research data)
   story: string | null;
-  whatMatters: string | null; // opens her GP summary, verbatim
+  whatMatters: string | null; // opens her health summary, verbatim
 
   // Part 2 — symptom check (presence before depth)
   menstrualChange: MenstrualChange | null;
   impacts: Record<string, Impact>;
   /** Anything she reported outside the defined symptom set, verbatim. */
   otherSymptoms: string[];
-  bothersMost: string[]; // up to 2 symptom ids — the heart of her GP summary
+  bothersMost: string[]; // up to 2 symptom ids — the heart of her health summary
 
   // Part 3 — duration & impact
   duration: string | null;
@@ -32,7 +32,7 @@ export interface SessionData {
   spokenToAnyone: "yes" | "no" | null;
   toldVerbatim: string | null; // what she was told — unique data
   heldBack: string | null; // if she hasn't sought help — non-judgemental
-  gpOneThing: string | null; // "if your GP could know just one thing…"
+  gpOneThing: string | null; // "if your healthcare practitioner could know just one thing…"
 
   // Part 5 — about her (equity layer, asked LAST, all skippable)
   ageBand: string | null;
