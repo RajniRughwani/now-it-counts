@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
-/* Now It Counts — warm, pastel, unhurried. Warmth, trust, honesty, organic. */
+/* DOT — warm, pastel, unhurried. Warmth, trust, honesty, organic. */
+/* Accent (--rose-*) matches the "Your Story Matters" campaign pink (#EC5797); background stays the app's own warm cream. */
 :root {
   --background: #fbf6f0; /* warm cream */
   --foreground: #3a3330; /* warm charcoal */
   --card: #ffffff;
-  --rose: #c97590; /* primary action */
-  --rose-deep: #b25f7b;
-  --rose-soft: #f3dde4;
-  --rose-mist: #faf0f3;
+  --rose: #ec5797; /* primary action — campaign pink */
+  --rose-deep: #df2675;
+  --rose-soft: #f5d6e3;
+  --rose-mist: #faeff4;
   --sage: #8fae8c;
   --sage-soft: #e6efe4;
   --lavender: #b9a9dd;
