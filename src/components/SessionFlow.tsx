@@ -177,22 +177,22 @@ export default function SessionFlow() {
         <Card>
           <PartLabel>Before we start</PartLabel>
           <Question>30 seconds, promise.</Question>
-          <div className="space-y-3 text-[15px] leading-relaxed mb-6">
-            <p>This is a chat, not a quiz. Skip anything, stop anytime.</p>
-            <p>
+          <ul className="list-disc pl-5 space-y-2 text-[15px] leading-relaxed mb-6">
+            <li>This is a chat, not a quiz. Skip anything, stop anytime.</li>
+            <li>
               You&apos;ll leave with <strong>the words</strong>: for the
               healthcare practitioner, the pharmacy, the group chat.
-            </p>
-            <p>
+            </li>
+            <li>
               Say yes below, and your answers join thousands of others,{" "}
               <strong>anonymously</strong>, to build the evidence about
               women&apos;s health the UK still doesn&apos;t have.
-            </p>
-            <p className="text-muted">
+            </li>
+            <li className="text-muted">
               No name. No audio kept. One tap deletes everything, no reason
               needed.
-            </p>
-          </div>
+            </li>
+          </ul>
           <div className="flex items-center gap-4 flex-wrap">
             <PrimaryButton
               onClick={() => {
