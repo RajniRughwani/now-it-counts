@@ -8,6 +8,11 @@ import { Impact, MenstrualChange } from "./symptoms";
 export interface SessionData {
   consented: boolean;
 
+  // Part 0 — context (optional, verbatim, STORAGE/summary only — see
+  // recognition.ts: this must never feed the recognition signal).
+  contextTypicalDay: string | null;
+  contextBiggestWorry: string | null;
+
   // Part 1 — her story first (verbatim is research data)
   story: string | null;
   whatMatters: string | null; // opens her GP summary, verbatim
@@ -15,6 +20,8 @@ export interface SessionData {
   // Part 2 — symptom check (presence before depth)
   menstrualChange: MenstrualChange | null;
   impacts: Record<string, Impact>;
+  /** Anything she reported outside the defined symptom set, verbatim. */
+  otherSymptoms: string[];
   bothersMost: string[]; // up to 2 symptom ids — the heart of her GP summary
 
   // Part 3 — duration & impact
@@ -36,10 +43,13 @@ export interface SessionData {
 
 export const EMPTY_SESSION: SessionData = {
   consented: false,
+  contextTypicalDay: null,
+  contextBiggestWorry: null,
   story: null,
   whatMatters: null,
   menstrualChange: null,
   impacts: {},
+  otherSymptoms: [],
   bothersMost: [],
   duration: null,
   lifeAreas: [],

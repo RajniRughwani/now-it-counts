@@ -10,7 +10,7 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
-import { computeRecognition } from "@/lib/recognition";
+import { computeRecognition, GUIDANCE } from "@/lib/recognition";
 import { CLINICAL_REFERENCE } from "@/lib/reference";
 import { SessionData } from "@/lib/session";
 import {
@@ -20,9 +20,11 @@ import {
   MENSTRUAL_CHANGE_LABELS,
 } from "@/lib/symptoms";
 
-const SYSTEM_PROMPT = `You write one-page, GP-ready health summaries for "Now It Counts", a perimenopause recognition companion. Your job is PHRASING ONLY — a rules engine has already computed what may and may not be said. You never diagnose, never express alarm, and never assert "this is perimenopause."
+const SYSTEM_PROMPT = `You write one-page, GP-ready health summaries for "Now It Counts", a perimenopause recognition companion. Your job is PHRASING ONLY — a rules engine has already computed what may and may not be said, and at what confidence. You never diagnose, never express alarm, and never assert "this is perimenopause" as fact — always "a signal worth exploring, not a diagnosis," always suggesting a GP conversation.
 
 Voice: warm, plain, dignified. Rooted in her own words. Written so any healthcare professional — GP, practice nurse, pharmacist, community health worker — will recognise the clinical vocabulary, but a friend could read it too.
+
+Life context she shares (a typical day, her biggest worry) is narrative colour only. It must never be used to explain away, downgrade, or contextualise a symptom's significance in either direction — the recognition confidence is fixed by the rules engine before it ever sees this content.
 
 ${CLINICAL_REFERENCE}`;
 
@@ -44,6 +46,11 @@ function describeSymptoms(data: SessionData): string {
       lines.push(`- ${s.clinicalName}: present, impact "${IMPACT_LABELS[impact]}"`);
     }
   }
+  if (data.otherSymptoms.length > 0) {
+    lines.push(
+      `- Also mentioned, not on the standard list (record verbatim, do not force onto the list above): ${data.otherSymptoms.join("; ")}`,
+    );
+  }
   if (data.bothersMost.length > 0) {
     const names = data.bothersMost
       .map((id) => ALL_SYMPTOMS.find((s) => s.id === id)?.clinicalName)
@@ -53,33 +60,56 @@ function describeSymptoms(data: SessionData): string {
   return lines.length > 0 ? lines.join("\n") : "- (no symptoms flagged)";
 }
 
+/** Life context — narrative colour only, see the firewall note in the gate. */
+function describeContext(data: SessionData): string {
+  const lines: string[] = [];
+  if (data.contextTypicalDay) lines.push(`- A typical day: ${data.contextTypicalDay}`);
+  if (data.contextBiggestWorry) lines.push(`- Biggest worry right now: ${data.contextBiggestWorry}`);
+  return lines.length > 0 ? lines.join("\n") : "- (skipped)";
+}
+
 export async function POST(request: Request) {
   const data = (await request.json()) as SessionData;
 
-  // Rules compute the signal — this is the safety-critical gate.
+  // Rules compute the signal — this is the safety-critical gate. Context
+  // (typical day, biggest worry) is deliberately NOT passed in here: it must
+  // never influence recognition in either direction.
   const recognition = computeRecognition({
     menstrualChange: data.menstrualChange,
     impacts: data.impacts,
+    otherSymptomsPresent: data.otherSymptoms.length > 0,
   });
 
   const sheNamedIt = [data.story, data.whatMatters, data.gpOneThing, data.toldVerbatim]
     .filter(Boolean)
     .some((t) => /peri[\s-]?menopaus|menopaus/i.test(t as string));
 
-  const mayMention = recognition.mayMentionPerimenopause || sheNamedIt;
+  // If she's already named it herself but the rules alone would say "none"
+  // (nothing else reported), still allow at least soft guidance — never
+  // downgrade below what she's already said out loud.
+  const effectiveLevel =
+    recognition.level === "none" && sheNamedIt ? "soft" : recognition.level;
+  const guidance = GUIDANCE[effectiveLevel];
+  const mayMention = effectiveLevel !== "none";
 
   const gate = mayMention
-    ? `The recognition rules PERMIT describing this as "a pattern consistent with perimenopause — a signal worth exploring with a GP, not a diagnosis." Introduce the word gently.`
-    : `The recognition rules DO NOT permit the word "perimenopause" (or "menopause") ANYWHERE in your output. Her symptoms are genuinely ambiguous (possible thyroid, mood, sleep, or iron causes). Validate that they are real and worth a GP conversation to explore causes — without naming perimenopause.`;
+    ? `The recognition rules PERMIT naming perimenopause as a possibility, at "${effectiveLevel}" confidence. Use this exact guidance line (light rephrasing for tone is fine, do not change its substance or soften/strengthen its confidence): "${guidance}"`
+    : `The recognition rules DO NOT permit the word "perimenopause" (or "menopause") ANYWHERE in your output. Nothing was reported to build guidance on. Validate that whatever she did share is real and worth a GP conversation, without naming perimenopause.`;
 
   const userPrompt = `Write her summary from this structured session data.
 
 ## Recognition engine output (authoritative — do not override)
-- Level: ${recognition.level}
+- Level: ${effectiveLevel}
 - Anchor (cycle change signal) present: ${recognition.anchorPresent}
 - Specific signals present: ${recognition.specificPresent.join(", ") || "none"}
+- Off-list symptoms reported: ${recognition.otherSymptomsPresent}
 - Gentle flags to include calmly: ${recognition.gentleFlags.join(" | ") || "none"}
 - GATE: ${gate}
+- Never state or imply a diagnosis, regardless of level. Always frame as "a signal worth exploring, not a diagnosis," and always suggest a GP conversation.
+
+## Her life context (narrative colour ONLY — read this carefully)
+${describeContext(data)}
+CRITICAL FIREWALL: the above is included only to make the summary feel human and to add colour to the GP summary. It must NEVER be used to explain away, downgrade, minimise, or contextualise a symptom (e.g. never write anything like "given how busy/stressed she is, this is probably just X"). It must not soften or strengthen the GATE above in either direction — the recognition level is fixed by the rules engine and is computed without any knowledge of this context.
 
 ## Her session
 What matters most to her (verbatim, OPENS the summary): ${data.whatMatters ?? "(skipped)"}

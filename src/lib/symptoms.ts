@@ -111,28 +111,35 @@ export const DISMISSED: SymptomDef[] = [
     shortLabel: "Feeling drained",
     role: "dismissed",
     clinicalName: "Fatigue",
-    screenWording: "Been feeling drained — exhausted, no energy?",
+    screenWording: "Feeling drained, no energy?",
   },
   {
     id: "brain_fog",
     shortLabel: "Brain fog",
     role: "dismissed",
     clinicalName: "Brain fog / memory",
-    screenWording: "Brain not quite keeping up — foggy, forgetful, losing words?",
+    screenWording: "Brain fog: foggy, forgetful, losing words?",
   },
   {
-    id: "mood",
-    shortLabel: "Mood",
+    id: "anxiety",
+    shortLabel: "Anxiety",
     role: "dismissed",
-    clinicalName: "Mood (anxiety / low / irritable)",
-    screenWording: "How's your head been — anxious, low, snappy, tearful?",
+    clinicalName: "Anxiety",
+    screenWording: "Anxious, on edge, or panicky?",
+  },
+  {
+    id: "low_mood_irritability",
+    shortLabel: "Low mood",
+    role: "dismissed",
+    clinicalName: "Low mood / irritability",
+    screenWording: "Low, tearful, or snappy?",
   },
   {
     id: "sleep",
     shortLabel: "Sleep",
     role: "dismissed",
     clinicalName: "Sleep problems",
-    screenWording: "How's sleep — trouble getting to sleep, or waking in the night?",
+    screenWording: "Trouble sleeping, or waking in the night?",
   },
 ];
 
@@ -142,7 +149,7 @@ export const DISMISSED: SymptomDef[] = [
  */
 export const SUPPORTING: SymptomDef[] = [
   {
-    id: "joint_muscle_aches",
+    id: "joint_aches",
     shortLabel: "Aches & stiffness",
     role: "supporting",
     clinicalName: "Joint / muscle aches",
@@ -156,23 +163,31 @@ export const SUPPORTING: SymptomDef[] = [
     screenWording: "Weight or bloating changes?",
   },
   {
+    id: "urinary",
+    shortLabel: "Bladder changes",
+    role: "supporting",
+    clinicalName: "Urinary / bladder changes",
+    screenWording: "Any bladder changes: needing to go more, leaks, or infections?",
+  },
+  {
     id: "palpitations",
     shortLabel: "Heart racing",
     role: "supporting",
     clinicalName: "Palpitations",
     screenWording: "Heart racing or fluttering?",
-    gentleFlag: "Worth getting checked by a doctor either way — calmly, no rush.",
+    gentleFlag: "Worth getting checked by a doctor either way, calmly, no rush.",
   },
 ];
 
-/** All 11 recognition symptoms (anchor + 2 specific + 4 dismissed + 3 supporting). */
+/** All 12 recognition symptoms (anchor + 2 specific + 5 dismissed + 4 supporting). */
 export const ALL_SYMPTOMS: SymptomDef[] = [ANCHOR, ...SPECIFIC, ...DISMISSED, ...SUPPORTING];
 
 /**
- * Deliberately OUT of the recognition screen — real symptoms, but non-specific,
- * late-appearing, or intrusive. They lengthen the flow and cause drop-off
- * without helping recognition. May appear in a fuller view or the GP summary,
- * but they don't drive the signal.
+ * Deliberately OUT of the defined recognition set — real symptoms, but
+ * non-specific, late-appearing, or intrusive to ask about directly. They
+ * don't get their own scripted question. If she brings one up unprompted,
+ * it's still captured verbatim (see the off-list capture path) and shown in
+ * the GP summary — it just doesn't drive the signal on its own.
  */
 export const EXCLUDED_FROM_RECOGNITION = [
   "skin quality",
@@ -181,5 +196,4 @@ export const EXCLUDED_FROM_RECOGNITION = [
   "strength / stamina",
   "vaginal dryness",
   "libido",
-  "bladder problems",
 ] as const;

@@ -18,7 +18,11 @@ const SYMPTOM_IDS = ALL_SYMPTOMS.filter((s) => s.role !== "anchor").map((s) => s
 
 const SYSTEM_PROMPT = `You extract structured data from a transcript of a spoken health conversation. You do NOT diagnose, decide, or infer beyond what she explicitly said.
 
-Safety-critical rule: only mark a symptom as reported if she clearly indicated it applies to HER — not just because the agent asked about it. A question with no clear "yes" is not a reported symptom. When in doubt, leave it out. This extraction feeds a rules engine that decides whether "perimenopause" may ever be mentioned to her — false positives here are a safety issue, not just a data-quality one.
+Safety-critical rule: only mark a symptom as reported if she clearly indicated it applies to HER — not just because the agent asked about it. A question with no clear "yes" is not a reported symptom. When in doubt, leave it out. This extraction feeds a rules engine that decides whether "perimenopause" may ever be mentioned to her, and at what confidence — false positives here are a safety issue, not just a data-quality one.
+
+Two things to extract separately and NEVER conflate:
+- otherSymptomsReported: anything she reported that is NOT one of the defined SYMPTOM_IDS (e.g. urinary infections she describes in her own words if not captured by the "urinary" id, headaches, skin changes, anything). Record each briefly in HER words. Do not force an off-list mention into one of the defined ids just because it seems related.
+- contextTypicalDay / contextBiggestWorry: her answers to the two OPTIONAL opening context questions ("what does a typical day look like", "what's your biggest worry right now"), verbatim or close to it. These are for the human picture only — do not let them influence which symptoms you mark as present.
 
 Extract only what was actually said. Use null / empty arrays for anything not covered in the conversation.`;
 
@@ -53,6 +57,8 @@ export async function POST(request: Request) {
           schema: {
             type: "object",
             properties: {
+              contextTypicalDay: { type: ["string", "null"] },
+              contextBiggestWorry: { type: ["string", "null"] },
               story: { type: ["string", "null"] },
               whatMatters: { type: ["string", "null"] },
               menstrualChange: {
@@ -88,6 +94,10 @@ export async function POST(request: Request) {
                   additionalProperties: false,
                 },
               },
+              otherSymptomsReported: {
+                type: "array",
+                items: { type: "string" },
+              },
               bothersMost: {
                 type: "array",
                 items: { type: "string", enum: [...SYMPTOM_IDS, "menstrual_change"] },
@@ -106,10 +116,13 @@ export async function POST(request: Request) {
               postcodeDistrict: { type: ["string", "null"] },
             },
             required: [
+              "contextTypicalDay",
+              "contextBiggestWorry",
               "story",
               "whatMatters",
               "menstrualChange",
               "symptomsReported",
+              "otherSymptomsReported",
               "bothersMost",
               "duration",
               "lifeAreas",
@@ -141,10 +154,13 @@ export async function POST(request: Request) {
 
     return Response.json({
       consented: true,
+      contextTypicalDay: extracted.contextTypicalDay,
+      contextBiggestWorry: extracted.contextBiggestWorry,
       story: extracted.story,
       whatMatters: extracted.whatMatters,
       menstrualChange: extracted.menstrualChange,
       impacts,
+      otherSymptoms: extracted.otherSymptomsReported ?? [],
       bothersMost: extracted.bothersMost ?? [],
       duration: extracted.duration,
       lifeAreas: extracted.lifeAreas ?? [],
