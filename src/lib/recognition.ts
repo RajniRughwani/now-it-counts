@@ -1,5 +1,5 @@
 /**
- * Now It Counts — the recognition rule (safety-critical).
+ * DOT — the recognition rule (safety-critical).
  *
  * Rules compute the signal; the LLM only phrases. Non-hallucinating by design.
  *

@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Now It Counts",
+  title: "DOT",
   description:
-    "You've been describing this for years. Now it counts. A gentle conversation that helps you recognise what your body might be telling you, and leaves you with a GP-ready summary you own.",
+    "You've been describing this for years. Your story matters. A gentle conversation that helps you recognise what your body might be telling you, and leaves you with a GP-ready summary you own.",
 };
 
 export default function RootLayout({

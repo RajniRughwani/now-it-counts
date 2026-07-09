@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Closing — her record. "You've been describing this for years. Now it counts."
+ * Closing — her record. "You've been describing this for years. Your story matters."
  * Rules computed the signal during the session; Claude phrases the one-pager
  * via /api/summary. Session data never persists beyond this browser session.
  */
@@ -59,7 +59,7 @@ export default function SummaryPage() {
   return (
     <main className="min-h-screen flex flex-col items-center px-4 py-8 gap-6">
       <header className="w-full max-w-xl flex items-center justify-between print:hidden">
-        <span className="font-medium tracking-wide">Now It Counts</span>
+        <span className="font-medium tracking-wide">DOT</span>
         <button
           type="button"
           onClick={onDelete}
@@ -143,7 +143,7 @@ export default function SummaryPage() {
 
           <p className="text-center text-sm text-muted max-w-md print:hidden">
             You&apos;ve been describing this for years.{" "}
-            <span className="text-rose font-medium">Now it counts.</span>
+            <span className="text-rose font-medium">Your story matters.</span>
           </p>
           <Link
             href="/"

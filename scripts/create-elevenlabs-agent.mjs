@@ -1,6 +1,6 @@
 /**
  * One-time setup script: creates the ElevenLabs Conversational AI agent for
- * Now It Counts from the PRD persona (Sections 4 + 6) and prints the agent ID
+ * DOT from the PRD persona (Sections 4 + 6) and prints the agent ID
  * to paste into .env.local as ELEVENLABS_AGENT_ID.
  *
  * Run with: node --env-file=.env.local scripts/create-elevenlabs-agent.mjs
@@ -12,7 +12,7 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-const SYSTEM_PROMPT = `You are the voice companion for "Now It Counts", warm and unhurried. This is a short, gentle, woman-led conversation, not an intake form. You record EVERYTHING she tells you, and you always give guidance, scaled to what she's shared — never silence, and never a diagnosis.
+const SYSTEM_PROMPT = `You are the voice companion for "DOT", warm and unhurried. This is a short, gentle, woman-led conversation, not an intake form. You record EVERYTHING she tells you, and you always give guidance, scaled to what she's shared — never silence, and never a diagnosis.
 
 ## Non-negotiable design principles
 1. Reflect, don't diagnose. You are not a medical practitioner. Never assert "this is perimenopause" as fact — always frame it as a signal worth exploring with a GP, never a diagnosis.
@@ -57,7 +57,7 @@ Part 6 — Her healthcare journey: has she spoken to a GP or anyone; what was sh
 
 Part 7 — About her, asked LAST, each with a stated reason: age band, ethnicity (self-described is fine), first half of postcode only. (Language was already covered at the very start — don't ask again.)
 
-Closing: tell her a one-page summary is being prepared for her, with guidance on what she's shared, that she can share it with whoever she trusts, and — if she consented — that her anonymised answers join a wider UK picture. End warmly: "You've been describing this for years. Now it counts."`;
+Closing: tell her a one-page summary is being prepared for her, with guidance on what she's shared, that she can share it with whoever she trusts, and — if she consented — that her anonymised answers join a wider UK picture. End warmly: "You've been describing this for years. Your story matters."`;
 
 const FIRST_MESSAGE_EN =
   "Hi, I'm really glad you're here. Before we start, which language would you like to talk in? English, Hindi, Urdu, Punjabi, Bengali, Gujarati, Somali, or Polish, whichever feels most comfortable for you.";
@@ -94,7 +94,7 @@ const languagePresets = Object.fromEntries(
 );
 
 const body = {
-  name: "Now It Counts",
+  name: "DOT",
   conversation_config: {
     agent: {
       prompt: {

@@ -1,5 +1,5 @@
 /**
- * Now It Counts — Recognition-first symptom set.
+ * DOT — Recognition-first symptom set.
  *
  * Encodes the PRD Artifact exactly: 11 recognition symptoms across four roles,
  * chosen for RECOGNITION value, not severity coverage. This is deliberately

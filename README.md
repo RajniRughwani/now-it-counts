@@ -1,6 +1,6 @@
-# Now It Counts
+# DOT
 
-**"You've been describing this for years. Now it counts."**
+**"You've been describing this for years. Your story matters."**
 
 A perimenopause **recognition** companion — built at the ZOE Women in Tech Hackathon, 8–9 July 2026 (Team 3: Detection & Prevention, built the Community & Advocacy way).
 
@@ -10,7 +10,7 @@ Not a tracker. Not MenoScale. A one-time, unhurried conversation that helps a wo
 
 1. **Consent first** — spoken/read explainer, explicit yes, delete-everything rights stated up front.
 2. **Her story first** — open-ended, verbatim capture of what matters most to her.
-3. **Symptom check** — 11 recognition symptoms across four roles (anchor / specific / dismissed / supporting), single impact scale, presence before depth.
+3. **Symptom check** — 12 recognition symptoms across four roles (anchor / specific / dismissed / supporting), plus verbatim capture of anything reported outside the defined set, single impact scale, presence before depth.
 4. **Duration & impact** — how long, and what it's affected.
 5. **Her healthcare journey** — what she was told, verbatim (data no existing instrument collects).
 6. **About her, last** — equity layer (age band, ethnicity, language, postcode district), each with a stated reason, all skippable.
@@ -18,7 +18,7 @@ Not a tracker. Not MenoScale. A one-time, unhurried conversation that helps a wo
 
 ## The safety rule (non-negotiable)
 
-"This looks like perimenopause" only ever surfaces when the **anchor** (menstrual change) or a **specific signal** (hot flushes / night sweats) is present. The dismissed cluster (fatigue, brain fog, mood, sleep) amplifies a signal but never creates one alone. **Rules compute the signal; the LLM only phrases it.** Always "a signal worth exploring, not a diagnosis."
+Guidance is always given, never withheld, but its confidence scales with what's present. A **confident** signal ("consistent with perimenopause") only ever surfaces when the **anchor** (menstrual change) or a **specific signal** (hot flushes / night sweats) is present. Everything else — the dismissed cluster (fatigue, brain fog, anxiety, low mood/irritability, sleep), supporting symptoms (joint aches, weight/bloating, urinary changes), and anything reported outside the defined set — can only ever produce **soft**, hedged guidance ("can sometimes relate to perimenopause, among other things"), never confident guidance on its own. Life context (a typical day, her biggest worry) is recorded for the human picture but is walled off from the signal entirely. **Rules compute the signal; the LLM only phrases it.** Never a diagnosis, always a GP conversation.
 
 ## Design principles
 
